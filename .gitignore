@@ -1,0 +1,14 @@
+.gradle/
+.idea/
+build/
+run/
+
+/tumble-api/build.gradle.kts
+/tumble-server/build.gradle.kts
+/lophine-api/
+/lophine-server/
+/paper-api/
+/paper-server/
+/folia-api/
+/folia-server/
+/paper-api-generator/
