@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: ingilying <ingilying@outlook.com>
-Date: Thu, 30 Jul 2026 23:06:54 +0800
+Date: Fri, 31 Jul 2026 12:07:41 +0800
 Subject: [PATCH] Tumble: Rebrand server
 
 
@@ -32,70 +32,41 @@ index ce97076bd642bff22c9fc10212e19f81327d7c5a..ad5db5bc549e43166d8bf556578be6a2
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 37ca11405d4f77e3acf7fc3c175d1f9ced8f0f20..f35950f372a101d090c017b72469f15a83ed5b00 100644
+index 37ca11405d4f77e3acf7fc3c175d1f9ced8f0f20..6fc4821057c86c27b01674b6b0e4c27d1ee37c3c 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -53,58 +53,14 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -45,6 +45,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     private static final ServerBuildInfo BUILD_INFO = ServerBuildInfo.buildInfo();
+     private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://papermc.io)";
+     private static final Gson GSON = new Gson();
++    // Enable after Tumble has a public update repository.
++    private static final boolean UPDATE_CHECK_ENABLED = false;
  
      @Override
+     public long getCacheTime() {
+@@ -54,7 +56,9 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Override
      public Component getVersionMessage() {
--        final Component updateMessage;
+         final Component updateMessage;
 -        if (BUILD_INFO.buildNumber().isEmpty() && BUILD_INFO.gitCommit().isEmpty()) {
--            updateMessage = text("You are running a development version without access to version information", color(0xFF5300));
--        } else {
--            updateMessage = getUpdateStatusMessage();
--        }
-+        final Component updateMessage = text("You are running Tumble " + BUILD_INFO.asString(VERSION_SIMPLE), NamedTextColor.GREEN);
-         final @Nullable Component history = this.getHistory();
- 
-         return history != null ? Component.textOfChildren(updateMessage, Component.newline(), history) : updateMessage;
++        if (!UPDATE_CHECK_ENABLED) {
++            updateMessage = text("Tumble update checks are currently disabled", NamedTextColor.YELLOW);
++        } else if (BUILD_INFO.buildNumber().isEmpty() && BUILD_INFO.gitCommit().isEmpty()) {
+             updateMessage = text("You are running a development version without access to version information", color(0xFF5300));
+         } else {
+             updateMessage = getUpdateStatusMessage();
+@@ -65,6 +69,11 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      public static void getUpdateStatusStartupMessage() {
--        int distance = DISTANCE_ERROR;
--
--        final OptionalInt buildNumber = BUILD_INFO.buildNumber();
--        if (buildNumber.isEmpty() && BUILD_INFO.gitCommit().isEmpty()) {
--            COMPONENT_LOGGER.warn(text("*** You are running a development version without access to version information ***"));
--        } else {
--            final Optional<MinecraftVersionFetcher> apiResult = fetchMinecraftVersionList();
--            if (buildNumber.isPresent() && false) {
--                distance = fetchDistanceFromSiteApi(buildNumber.getAsInt());
--            } else {
--                final Optional<String> gitBranch = BUILD_INFO.gitBranch();
--                final Optional<String> gitCommit = BUILD_INFO.gitCommit();
--                if (gitBranch.isPresent() && gitCommit.isPresent()) {
--                    distance = fetchDistanceFromGitHub(gitBranch.get(), gitCommit.get());
--                }
--            }
--
--            switch (distance) {
--                case DISTANCE_ERROR -> COMPONENT_LOGGER.error(text("*** Error obtaining version information! Cannot fetch version info ***"));
--                case 0 -> apiResult.ifPresent(result -> {
--                    COMPONENT_LOGGER.warn(text("*************************************************************************************"));
--                    COMPONENT_LOGGER.warn(text("You are running the latest build for your Minecraft version (" + BUILD_INFO.minecraftVersionId() + ")"));
--                    COMPONENT_LOGGER.warn(text("However, you are " + result.distance() + " release" + (result.distance() == 1 ? "" : "s") + " behind the latest stable release (" + result.latestVersion() + ")!"));
--                    COMPONENT_LOGGER.warn(text("It is recommended that you update as soon as possible"));
--                    COMPONENT_LOGGER.warn(text(DOWNLOAD_PAGE));
--                    COMPONENT_LOGGER.warn(text("*************************************************************************************"));
--                });
--                case DISTANCE_UNKNOWN -> COMPONENT_LOGGER.warn(text("*** You are running an unknown version! Cannot fetch version info ***"));
--                default -> {
--                    if (apiResult.isPresent()) {
--                        final MinecraftVersionFetcher result = apiResult.get();
--                        COMPONENT_LOGGER.warn(text("*** You are running an outdated version of Minecraft, which is " + result.distance() + " release" + (result.distance() == 1 ? "" : "s") + " and " + distance + " build" + (distance == 1 ? "" : "s") + " behind!"));
--                        COMPONENT_LOGGER.warn(text("*** Please update to the latest stable version on " + DOWNLOAD_PAGE + " ***"));
--                    } else {
--                        COMPONENT_LOGGER.info(text("*** Currently you are " + distance + " build" + (distance == 1 ? "" : "s") + " behind ***"));
--                        COMPONENT_LOGGER.info(text("*** It is highly recommended to download the latest build from " + DOWNLOAD_PAGE + " ***"));
--                    }
--                }
--            }
--        }
-+        COMPONENT_LOGGER.info(text("Running Tumble " + BUILD_INFO.asString(VERSION_SIMPLE)));
-     }
++        if (!UPDATE_CHECK_ENABLED) {
++            COMPONENT_LOGGER.info(text("Tumble update checks are currently disabled"));
++            return;
++        }
++
+         int distance = DISTANCE_ERROR;
  
-     private static Component getUpdateStatusMessage() {
+         final OptionalInt buildNumber = BUILD_INFO.buildNumber();
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
 index 883cb95cb4ef72e40af7073f76fc2f3219a51127..34263f505724542d78a992ef43b1c75e0556989e 100644
 --- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
