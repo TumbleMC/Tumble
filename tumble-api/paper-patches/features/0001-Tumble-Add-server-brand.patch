@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ingilying <ingilying@outlook.com>
+Date: Thu, 30 Jul 2026 23:06:54 +0800
+Subject: [PATCH] Tumble: Add server brand
+
+
+diff --git a/src/main/java/io/papermc/paper/ServerBuildInfo.java b/src/main/java/io/papermc/paper/ServerBuildInfo.java
+index 1727ea0b873ee4f9a86cca62eac6dc3a5063b4e6..aee2470c2625e9a4fb1e53acbe3448789c4c2696 100644
+--- a/src/main/java/io/papermc/paper/ServerBuildInfo.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfo.java
+@@ -30,6 +30,13 @@ public interface ServerBuildInfo {
+     Key BRAND_LOPHINE_ID = Key.key("lophinelabs", "lophine");
+     // Lophine end
+ 
++    // Tumble start
++    /**
++     * The brand id for Tumble.
++     */
++    Key BRAND_TUMBLE_ID = Key.key("org.tumblemc", "tumble");
++    // Tumble end
++
+     /**
+      * Gets the {@code ServerBuildInfo}.
+      *
