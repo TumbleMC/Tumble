@@ -32,34 +32,36 @@ index ce97076bd642bff22c9fc10212e19f81327d7c5a..ad5db5bc549e43166d8bf556578be6a2
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 37ca11405d4f77e3acf7fc3c175d1f9ced8f0f20..6fc4821057c86c27b01674b6b0e4c27d1ee37c3c 100644
+index 37ca11405d4f77e3acf7fc3c175d1f9ced8f0f20..438605ee6a204a8ab21c4ca4adb9ecea73c14f33 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -45,6 +45,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -40,8 +40,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     private static final ComponentLogger COMPONENT_LOGGER = ComponentLogger.logger(LogManager.getRootLogger().getName());
+     private static final int DISTANCE_ERROR = -1;
+     private static final int DISTANCE_UNKNOWN = -2;
+-    private static final String DOWNLOAD_PAGE = "https://github.com/LophineLabs/Lophine"; // Lophine
+-    private static final String REPOSITORY = "LophineLabs/Lophine"; // Lophine
++    private static final String DOWNLOAD_PAGE = "https://github.com/TumbleMC/Tumble"; // Tumble
++    private static final String REPOSITORY = "TumbleMC/Tumble"; // Tumble
      private static final ServerBuildInfo BUILD_INFO = ServerBuildInfo.buildInfo();
      private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://papermc.io)";
      private static final Gson GSON = new Gson();
-+    // Enable after Tumble has a public update repository.
-+    private static final boolean UPDATE_CHECK_ENABLED = false;
- 
-     @Override
-     public long getCacheTime() {
-@@ -54,7 +56,9 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -54,7 +54,9 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Override
      public Component getVersionMessage() {
          final Component updateMessage;
 -        if (BUILD_INFO.buildNumber().isEmpty() && BUILD_INFO.gitCommit().isEmpty()) {
-+        if (!UPDATE_CHECK_ENABLED) {
++        if (!org.tumblemc.tumble.config.modules.misc.UpdateCheckConfig.enable_update_check) {
 +            updateMessage = text("Tumble update checks are currently disabled", NamedTextColor.YELLOW);
 +        } else if (BUILD_INFO.buildNumber().isEmpty() && BUILD_INFO.gitCommit().isEmpty()) {
              updateMessage = text("You are running a development version without access to version information", color(0xFF5300));
          } else {
              updateMessage = getUpdateStatusMessage();
-@@ -65,6 +69,11 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -65,6 +67,11 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      public static void getUpdateStatusStartupMessage() {
-+        if (!UPDATE_CHECK_ENABLED) {
++        if (!org.tumblemc.tumble.config.modules.misc.UpdateCheckConfig.enable_update_check) {
 +            COMPONENT_LOGGER.info(text("Tumble update checks are currently disabled"));
 +            return;
 +        }
@@ -68,7 +70,7 @@ index 37ca11405d4f77e3acf7fc3c175d1f9ced8f0f20..6fc4821057c86c27b01674b6b0e4c27d
  
          final OptionalInt buildNumber = BUILD_INFO.buildNumber();
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
-index 883cb95cb4ef72e40af7073f76fc2f3219a51127..34263f505724542d78a992ef43b1c75e0556989e 100644
+index 883cb95cb4ef72e40af7073f76fc2f3219a51127..3d31c0d64853e8bb83c2800aeecacb590a9994b5 100644
 --- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
 +++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
 @@ -31,7 +31,7 @@ public record ServerBuildInfoImpl(
@@ -97,20 +99,40 @@ index 883cb95cb4ef72e40af7073f76fc2f3219a51127..34263f505724542d78a992ef43b1c75e
      @Override
      public boolean isBrandCompatible(final @NotNull Key brandId) {
 -        return brandId.equals(this.brandId) || brandId.equals(BRAND_PAPER_ID) || brandId.equals(BRAND_FOLIA_ID) || brandId.equals(BRAND_LOPHINE_ID); // Lophine
-+        return brandId.equals(this.brandId) || brandId.equals(BRAND_PAPER_ID) || brandId.equals(BRAND_FOLIA_ID) || brandId.equals(BRAND_LOPHINE_ID) || brandId.equals(BRAND_TUMBLE_ID);
++        return brandId.equals(this.brandId) || brandId.equals(BRAND_PAPER_ID) || brandId.equals(BRAND_FOLIA_ID) || brandId.equals(BRAND_LOPHINE_ID) || brandId.equals(BRAND_TUMBLE_ID); //Tumble
      }
  
      @Override
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index f5462b42c8231a5cf58a24e5fc5dc77bd550eb0a..280fd7b1ec611252a9123712617b7fc992f96def 100644
+index f5462b42c8231a5cf58a24e5fc5dc77bd550eb0a..e84568c5be6a325e8f799de88f266ed83d4eba74 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
-@@ -81,7 +81,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+@@ -80,8 +80,8 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     logger.log(Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring");
                      logger.log(Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once");
                      logger.log(Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes");
-                     logger.log(Level.SEVERE, "DO NOT REPORT THIS TO PAPER!");
+-                    logger.log(Level.SEVERE, "DO NOT REPORT THIS TO PAPER!");
 -                    logger.log(Level.SEVERE, "If you are unsure or still think this is a Lophine bug, please report this to https://github.com/LophineLabs/Lophine/issues");
-+                    logger.log(Level.SEVERE, "If you are unsure or still think this is a Tumble bug, contact your server distributor");
++                    logger.log(Level.SEVERE, "DO NOT REPORT THIS TO TUMBLE!");
++                    logger.log(Level.SEVERE, "If you are unsure or still think this is a Tumble bug, report it at https://github.com/TumbleMC/Tumble/issues");
                      logger.log(Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports");
                      logger.log(Level.SEVERE, "Server version: " + Bukkit.getServer().getVersion());
  
+@@ -103,7 +103,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     }
+                     // Paper end
+                 } else {
+-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---");
++                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO TUMBLE - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---");
+                     logger.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
+                 }
+                 // Paper end - Different message for short timeout
+@@ -121,7 +121,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                         WatchdogThread.dumpThread(thread, logger);
+                     }
+                 } else {
+-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");
++                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO TUMBLE - THIS IS NOT A BUG OR A CRASH ---");
+                 }
+ 
+                 logger.log(Level.SEVERE, "------------------------------");

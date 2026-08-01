@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 1 Aug 2026 13:29:56 +0800
+Subject: [PATCH] Tumble: Rebrand server
+
+
+diff --git a/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java b/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
+index b6d84fea596cfa78032151ab2f206b6b3d5dd197..dedf99ef199214619f2c312feef2a0a41fcfc7a6 100644
+--- a/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
++++ b/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
+@@ -8,7 +8,7 @@ import me.earthme.luminol.enums.EnumConfigCategory;
+ @ConfigClassInfo(category = EnumConfigCategory.MISC, name = "server_mod_name")
+ public class ServerModNameConfig implements IConfigModule {
+     @ConfigInfo(name = "name")
+-    public static String serverModName = "Lophine";
++    public static String serverModName = "Tumble"; //Tumble - Rebrand to Tumble
+ 
+     @ConfigInfo(name = "vanilla_spoof")
+     public static boolean fakeVanilla = false;

@@ -1,0 +1,181 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 1 Aug 2026 11:43:48 +0800
+Subject: [PATCH] Add Purpur Anvil Event and Config
+
+
+diff --git a/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b2199854b5c7e74a673cbadbe584e5aaebbe3883
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java
+@@ -0,0 +1,50 @@
++package org.purpurmc.purpur.event.inventory;
++
++import org.bukkit.entity.HumanEntity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.inventory.InventoryEvent;
++import org.bukkit.inventory.AnvilInventory;
++import org.bukkit.inventory.InventoryView;
++import org.bukkit.inventory.ItemStack;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++/**
++ * Called when a player takes the result item out of an anvil
++ */
++@NullMarked
++public class AnvilTakeResultEvent extends InventoryEvent {
++    private static final HandlerList handlers = new HandlerList();
++    private final Player player;
++    private final ItemStack result;
++
++    @ApiStatus.Internal
++    public AnvilTakeResultEvent(HumanEntity player, InventoryView view, ItemStack result) {
++        super(view);
++        this.player = (Player) player;
++        this.result = result;
++    }
++
++    public Player getPlayer() {
++        return player;
++    }
++
++    public ItemStack getResult() {
++        return result;
++    }
++
++    @Override
++    public AnvilInventory getInventory() {
++        return (AnvilInventory) super.getInventory();
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4293c4a57c1c054e8248b7712e8664bd4cb1a972
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java
+@@ -0,0 +1,35 @@
++package org.purpurmc.purpur.event.inventory;
++
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.inventory.InventoryEvent;
++import org.bukkit.inventory.AnvilInventory;
++import org.bukkit.inventory.InventoryView;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++/**
++ * Called when anvil slots change, triggering the result slot to be updated
++ */
++@NullMarked
++public class AnvilUpdateResultEvent extends InventoryEvent {
++    private static final HandlerList handlers = new HandlerList();
++
++    @ApiStatus.Internal
++    public AnvilUpdateResultEvent(InventoryView view) {
++        super(view);
++    }
++
++    @Override
++    public AnvilInventory getInventory() {
++        return (AnvilInventory) super.getInventory();
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/org/purpurmc/purpur/event/inventory/GrindstoneTakeResultEvent.java b/src/main/java/org/purpurmc/purpur/event/inventory/GrindstoneTakeResultEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d6db2d355553c9c54b83328d237b9c75e7a8e375
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/inventory/GrindstoneTakeResultEvent.java
+@@ -0,0 +1,72 @@
++package org.purpurmc.purpur.event.inventory;
++
++import org.bukkit.entity.HumanEntity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.inventory.InventoryEvent;
++import org.bukkit.inventory.GrindstoneInventory;
++import org.bukkit.inventory.InventoryView;
++import org.bukkit.inventory.ItemStack;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++/**
++ * Called when a player takes the result item out of a Grindstone
++ */
++@NullMarked
++public class GrindstoneTakeResultEvent extends InventoryEvent {
++    private static final HandlerList handlers = new HandlerList();
++    private final Player player;
++    private final ItemStack result;
++    private int experienceAmount;
++
++    @ApiStatus.Internal
++    public GrindstoneTakeResultEvent(HumanEntity player, InventoryView view, ItemStack result, int experienceAmount) {
++        super(view);
++        this.player = (Player) player;
++        this.result = result;
++        this.experienceAmount = experienceAmount;
++    }
++
++    public Player getPlayer() {
++        return player;
++    }
++
++    public ItemStack getResult() {
++        return result;
++    }
++
++    @Override
++    public GrindstoneInventory getInventory() {
++        return (GrindstoneInventory) super.getInventory();
++    }
++
++    /**
++     * Get the amount of experience this transaction will give
++     * (takes priority over and uses result from {@link org.bukkit.event.block.BlockExpEvent})
++     *
++     * @return Amount of experience to give
++     */
++    public int getExperienceAmount() {
++        return this.experienceAmount;
++    }
++
++    /**
++     * Set the amount of experience this transaction will give
++     * (takes priority over {@link org.bukkit.event.block.BlockExpEvent})
++     *
++     * @param experienceAmount Amount of experience to give
++     */
++    public void setExperienceAmount(int experienceAmount) {
++        this.experienceAmount = experienceAmount;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}

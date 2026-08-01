@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 1 Aug 2026 13:30:30 +0800
+Subject: [PATCH] Add Purpur Anvil Config and comments
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fcc8a6f670a03ff20862c418566a8e0eadf03646
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java
+@@ -0,0 +1,18 @@
++package org.tumblemc.tumble.config.modules.function;
++
++import me.earthme.luminol.config.IConfigModule;
++import me.earthme.luminol.config.flags.ConfigClassInfo;
++import me.earthme.luminol.config.flags.ConfigInfo;
++import me.earthme.luminol.enums.EnumConfigCategory;
++
++@ConfigClassInfo(category = EnumConfigCategory.FUNCTION, name = "anvil")
++public class AnvilConfig implements IConfigModule {
++    @ConfigInfo(name = "allow_inapplicable_enchants")
++    public static boolean allow_inapplicable_enchants = false;
++    @ConfigInfo(name = "allow_incompatible_enchants")
++    public static boolean allow_incompatible_enchants = false;
++    @ConfigInfo(name = "allow_higher_enchants_levels")
++    public static boolean allow_higher_enchants_levels = false;
++    @ConfigInfo(name = "replace_incompatible_enchants")
++    public static boolean replace_incompatible_enchants = false;
++}
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index 898d734f29852953d47d0ed87f1490ab69e27381..918269946937d69c07a0519a46e5e8e7d41f2336 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -194,5 +194,10 @@
+   "luminol.optimizations.use_async_protocol_switching.enabled.comment": "Uses async protocol preparation for mc.\nWarn: Due to the packet sequence was changed by this optimization, it might be\nuncompatible with some plugins(ViaVersion etc.)",
+   "luminol.optimizations.variable_entity_waking_up.entity_wakeup_duration_ratio_standard_deviation.comment": "If this value is set to any value > 0, waking up inactive entities happens spread over time, instead of many entities at once. This makes entities feel and behave more natural.\nThis setting is the coefficient of variation, or σ / μ (the ratio of the standard deviation to the mean) of the inactivity duration.\n\nIn other words, this setting is the value σ, so that the regular inactivity duration will be multiplied by a factor normal_distribution(μ = 1, σ).\nIf a value ≤ 0 is given, variable entity wake-up is disabled.",
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "Disable check for folia-supported for leaves plugin.\nATTENTION: No support will be provided if you enabled this.",
+-  "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "Disable check for folia-supported for spigot/bukkit/paper plugin.\nATTENTION: No support will be provided if you enabled this."
++  "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "Disable check for folia-supported for spigot/bukkit/paper plugin.\nATTENTION: No support will be provided if you enabled this.",
++  "tumble.function.anvil.allow_higher_enchants_levels.comment": "Allows the ability to increase enchantments passed their maximum level.\nFor example, efficiency V + efficiency V = efficiency VI.",
++  "tumble.function.anvil.allow_inapplicable_enchants.comment": "Allows applying enchantments on tools or armour that are normally not applicable.\nFor example, sharpness on a pickaxe.",
++  "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
++  "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
++  "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed."
+ }
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index 15ee415a701f0b3557c8cf91072a00f845e07cfe..b2ad0bea56a2ddd74bcb4d71192477ebe26a4954 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -194,5 +194,10 @@
+   "luminol.optimizations.use_async_protocol_switching.enabled.comment": "为 MC 使用异步协议准备。\n警告：由于此优化改变了数据包顺序，可能与某些插件（ViaVersion 等）不兼容。",
+   "luminol.optimizations.variable_entity_waking_up.entity_wakeup_duration_ratio_standard_deviation.comment": "如果此值设置为任何 > 0 的值，非活动实体的唤醒会分散在一段时间内，而不是大量实体同时唤醒。这会让实体感觉和行为更自然。\n此设置是不活动时长的变异系数，即 σ / μ（标准差与平均值的比值）。\n\n换句话说，此设置就是值 σ，使常规不活动时长乘以因子 normal_distribution(μ = 1, σ)。\n如果给定值 ≤ 0，则禁用可变实体唤醒。",
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "禁用对 leaves 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
+-  "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "禁用对 spigot/bukkit/paper 插件 folia-supported 的检查。\n注意：启用后将不提供支持。"
++  "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "禁用对 spigot/bukkit/paper 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
++  "tumble.function.anvil.allow_higher_enchants_levels.comment": "允许附魔等级超过最大等级。\n例如：效率 V + 效率 V = 效率 VI。",
++  "tumble.function.anvil.allow_inapplicable_enchants.comment": "允许在通常不适用该附魔的工具或盔甲上附魔。\n例如：在镐上附魔锋利。",
++  "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
++  "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
++  "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本."
+ }

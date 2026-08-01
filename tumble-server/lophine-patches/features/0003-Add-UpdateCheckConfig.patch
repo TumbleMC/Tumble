@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 1 Aug 2026 13:30:24 +0800
+Subject: [PATCH] Add UpdateCheckConfig
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/misc/UpdateCheckConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/misc/UpdateCheckConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ae8799e52aa5408e0b8b49b5dd14eb4a0e754af6
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/misc/UpdateCheckConfig.java
+@@ -0,0 +1,12 @@
++package org.tumblemc.tumble.config.modules.misc;
++
++import me.earthme.luminol.config.IConfigModule;
++import me.earthme.luminol.config.flags.ConfigClassInfo;
++import me.earthme.luminol.config.flags.ConfigInfo;
++import me.earthme.luminol.enums.EnumConfigCategory;
++
++@ConfigClassInfo(category = EnumConfigCategory.MISC, name = "update_check")
++public class UpdateCheckConfig implements IConfigModule {
++    @ConfigInfo(name = "enable_update_check")
++    public static boolean enable_update_check = true;
++}
