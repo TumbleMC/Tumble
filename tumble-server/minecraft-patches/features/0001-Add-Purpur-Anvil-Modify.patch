@@ -19,7 +19,7 @@ index fdd03c9d73a8a0527d0ead3fbbba20083c617e2c..6b3bf9a7e9250e69fcac55940b55e225
      public boolean checkReachable = true;
      public abstract org.bukkit.inventory.InventoryView getBukkitView();
 diff --git a/net/minecraft/world/inventory/AnvilMenu.java b/net/minecraft/world/inventory/AnvilMenu.java
-index a577225f59bb562b860cb90db72b4d658a69956f..9574daa209a866ce52165f571e194912e376990a 100644
+index a577225f59bb562b860cb90db72b4d658a69956f..c01e92b8831ab40255dfbcf9ac68b2771d3ec698 100644
 --- a/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/net/minecraft/world/inventory/AnvilMenu.java
 @@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
@@ -85,7 +85,7 @@ index a577225f59bb562b860cb90db72b4d658a69956f..9574daa209a866ce52165f571e194912
 -                        boolean compatible = enchantment.canEnchant(input);
 +                        // Tumble start - Config to allow unsafe enchants
 +                        boolean compatible = this.canDoUnsafeEnchants ||
-+                                fun.bm.lophine.config.modules.function.AnvilConfig.allow_inapplicable_enchants ||
++                                org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_inapplicable_enchants ||
 +                                enchantment.canEnchant(input); // whether the enchantment can be applied on specific item type
 +                        boolean canEnchant1 = true; // whether two incompatible enchantments can be applied on a single item
 +                        // Tumble end - Config to allow unsafe enchants
@@ -97,11 +97,11 @@ index a577225f59bb562b860cb90db72b4d658a69956f..9574daa209a866ce52165f571e194912
                          for (Holder<Enchantment> other : enchantments.keySet()) {
                              if (!other.equals(enchantmentHolder) && !Enchantment.areCompatible(enchantmentHolder, other)) {
 -                                compatible = false;
-+                                canEnchant1 = this.canDoUnsafeEnchants || fun.bm.lophine.config.modules.function.AnvilConfig.allow_incompatible_enchants
++                                canEnchant1 = this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
 +//                                        || org.purpurmc.purpur.PurpurConfig.allowIncompatibleEnchants
 +                                ; // Tumble - Purpur Anvil API // Tumble - canEnchant -> canEnchant1 - Config to allow unsafe enchants
 +                                // Tumble start - Config to allow unsafe enchants
-+                                if (!canEnchant1 && fun.bm.lophine.config.modules.function.AnvilConfig.replace_incompatible_enchants) {
++                                if (!canEnchant1 && org.tumblemc.tumble.config.modules.function.AnvilConfig.replace_incompatible_enchants) {
 +                                    removedEnchantments.add(other);
 +                                    canEnchant1 = true;
 +                                }
@@ -117,7 +117,7 @@ index a577225f59bb562b860cb90db72b4d658a69956f..9574daa209a866ce52165f571e194912
                          } else {
                              isAnyEnchantmentCompatible = true;
 -                            if (level > enchantment.getMaxLevel() && !this.bypassEnchantmentLevelRestriction) { // Paper - bypass anvil level restrictions
-+                            if (!fun.bm.lophine.config.modules.function.AnvilConfig.allow_higher_enchants_levels && level > enchantment.getMaxLevel() && !this.bypassEnchantmentLevelRestriction) { // Paper - bypass anvil level restrictions // Tumble - Config to allow unsafe enchants
++                            if (!org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_higher_enchants_levels && level > enchantment.getMaxLevel() && !this.bypassEnchantmentLevelRestriction) { // Paper - bypass anvil level restrictions // Tumble - Config to allow unsafe enchants
                                  level = enchantment.getMaxLevel();
                              }
  
@@ -140,7 +140,7 @@ index a577225f59bb562b860cb90db72b4d658a69956f..9574daa209a866ce52165f571e194912
              this.broadcastChanges();
 +
 +            // Tumble start - Purpur Anvil API
-+            if ((this.canDoUnsafeEnchants || fun.bm.lophine.config.modules.function.AnvilConfig.allow_inapplicable_enchants || fun.bm.lophine.config.modules.function.AnvilConfig.allow_incompatible_enchants
++            if ((this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_inapplicable_enchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
 +            ) && result != ItemStack.EMPTY) { // Tumble - Config to allow unsafe enchants
 +                ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 2, result));
 +                ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetDataPacket(this.containerId, 0, this.cost.get()));
