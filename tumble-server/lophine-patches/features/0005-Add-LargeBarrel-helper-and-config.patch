@@ -1,0 +1,338 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Mon, 3 Aug 2026 12:32:26 +0800
+Subject: [PATCH] Add LargeBarrel helper and config
+
+
+diff --git a/src/main/java/carpettisaddition/helpers/rule/largeBarrel/LargeBarrelHelper.java b/src/main/java/carpettisaddition/helpers/rule/largeBarrel/LargeBarrelHelper.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..6f3db3d990961be2f25e66c901eeec18266686e7
+--- /dev/null
++++ b/src/main/java/carpettisaddition/helpers/rule/largeBarrel/LargeBarrelHelper.java
+@@ -0,0 +1,196 @@
++/*
++ * This file is part of the Carpet TIS Addition project, licensed under the
++ * GNU Lesser General Public License v3.0
++ *
++ * Copyright (C) 2023  Fallen_Breath and contributors
++ *
++ * Carpet TIS Addition is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * Carpet TIS Addition is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with Carpet TIS Addition.  If not, see <https://www.gnu.org/licenses/>.
++ */
++
++package carpettisaddition.helpers.rule.largeBarrel;
++
++import carpettisaddition.utils.compat.RegistryTypes;
++import net.minecraft.world.level.block.BarrelBlock;
++import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.entity.BarrelBlockEntity;
++import net.minecraft.world.inventory.AbstractContainerMenu;
++import net.minecraft.world.inventory.ChestMenu;
++import net.minecraft.world.MenuProvider;
++import net.minecraft.world.entity.player.Player;
++import net.minecraft.world.entity.player.Inventory;
++import net.minecraft.world.CompoundContainer;
++import net.minecraft.world.Container;
++import net.minecraft.network.chat.Component;
++import net.minecraft.core.BlockPos;
++import net.minecraft.core.Direction;
++import net.minecraft.world.level.Level;
++import org.jetbrains.annotations.Nullable;
++
++import java.util.Optional;
++
++import net.minecraft.world.level.block.DoubleBlockCombiner;
++
++public class LargeBarrelHelper
++{
++    /**
++     * We want to have barrels facing on the same axis to be connected, but the 2 barrels will have opposite direction,
++     * which cannot pass the "blockState2.getValue(directionProperty) == blockState.getValue(directionProperty)" test in {@link DoubleBlockCombiner#combineWithNeigbour)}
++     * This global flag is for enabling the mixin
++     *   {@link1 carpettisaddition.mixins.rule.largeBarrel.DoubleBlockPropertiesMixin} and
++     *   {@link1 carpettisaddition.mixins.rule.largeBarrel.AbstractStateMixin}
++     * to ignore the axis direction of the BarrelBlock.FACING property of the barrel block
++     */
++    // Tumble - Stop erroring bro.
++    public static final ThreadLocal<Boolean> gettingLargeBarrelPropertySource = ThreadLocal.withInitial(() -> false);
++    public static final ThreadLocal<Boolean> applyAxisOnlyDirectionTesting = ThreadLocal.withInitial(() -> false);
++
++    /**
++     * Level.getBlockEntity does not support off-server-thread accessing
++     * When we want to get the large barrel inventory in single player via the integrated server world
++     * on client Render thread, we need to somehow disable the off-thread testing
++     *
++     * Here's the flag for enable the functionality of mixin
++     * {@link1 carpettisaddition.mixins.rule.largeBarrel.compat.malilib.BlockEntityTypeMixin}
++     */
++    // Tumble - Stop erroring bro.
++    public static final ThreadLocal<Boolean> enabledOffThreadBlockEntityAccess = ThreadLocal.withInitial(() -> false);
++
++    public static DoubleBlockCombiner.NeighborCombineResult<? extends BarrelBlockEntity> getBlockEntitySource(BlockState blockState, Level world, BlockPos pos) {
++        gettingLargeBarrelPropertySource.set(true);
++        try
++        {
++            return DoubleBlockCombiner.combineWithNeigbour(
++                    RegistryTypes.BlockEntity.BARREL,
++                    state -> state.getValue(BarrelBlock.FACING).getAxisDirection() == Direction.AxisDirection.NEGATIVE ? DoubleBlockCombiner.BlockType.FIRST : DoubleBlockCombiner.BlockType.SECOND,
++                    state -> state.getValue(BarrelBlock.FACING).getOpposite(),
++                    BarrelBlock.FACING,
++                    blockState, world, pos,
++                    (iWorld, blockPos) -> false
++            );
++        }
++        finally
++        {
++            gettingLargeBarrelPropertySource.set(false);
++            applyAxisOnlyDirectionTesting.set(false); // just in case
++        }
++    }
++
++    /**
++     * Just like {@link1 net.minecraft.world.level.block.ChestBlock#getContainer}
++     */
++    // Tumble - Stop erroring bro.
++    @Nullable
++    public static Container getInventory(BlockState state, Level world, BlockPos pos)
++    {
++        return getBlockEntitySource(state, world, pos).apply(LargeBarrelHelper.INVENTORY_RETRIEVER).orElse(null);
++    }
++
++    public static boolean isLargeBarrel(BlockState state, Level world, BlockPos pos)
++    {
++        return getOtherPos(state, world, pos) != null;
++    }
++
++    @Nullable
++    public static BlockPos getOtherPos(BlockState state, Level world, BlockPos pos)
++    {
++        if (state.getBlock() instanceof BarrelBlock)
++        {
++            Direction facing = state.getValue(BarrelBlock.FACING);
++            BlockPos otherPos = pos.relative(facing.getOpposite());
++            BlockState otherState = world.getBlockState(otherPos);
++            if (otherState.getBlock() instanceof BarrelBlock)
++            {
++                Direction otherFacing = otherState.getValue(BarrelBlock.FACING);
++                if (otherFacing == facing.getOpposite())
++                {
++                    return otherPos;
++                }
++            }
++        }
++        return null;
++    }
++
++    /**
++     * INVENTORY_RETRIEVER and NAME_RETRIEVER are totally not stolen from {@link net.minecraft.world.level.block.ChestBlock} XD
++     */
++
++    public static final DoubleBlockCombiner.Combiner<BarrelBlockEntity, Optional<Container>> INVENTORY_RETRIEVER = new DoubleBlockCombiner.Combiner<BarrelBlockEntity, Optional<Container>>()
++    {
++        public Optional<Container> acceptDouble(BarrelBlockEntity BarrelBlockEntity, BarrelBlockEntity BarrelBlockEntity2)
++        {
++            return Optional.of(new CompoundContainer(BarrelBlockEntity, BarrelBlockEntity2));
++        }
++
++        public Optional<Container> acceptSingle(BarrelBlockEntity BarrelBlockEntity)
++        {
++            return Optional.of(BarrelBlockEntity);
++        }
++
++        public Optional<Container> acceptNone()
++        {
++            return Optional.empty();
++        }
++    };
++
++    public static final DoubleBlockCombiner.Combiner<BarrelBlockEntity, Optional<MenuProvider>> NAME_RETRIEVER = new DoubleBlockCombiner.Combiner<BarrelBlockEntity, Optional<MenuProvider>>()
++    {
++        public Optional<MenuProvider> acceptDouble(BarrelBlockEntity barrel1, BarrelBlockEntity barrel2)
++        {
++            final Container inventory = new CompoundContainer(barrel1, barrel2);
++            return Optional.of(new MenuProvider()
++            {
++                @Nullable
++                @Override
++                public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player playerEntity)
++                {
++                    if (barrel1.canOpen(playerEntity) && barrel2.canOpen(playerEntity))
++                    {
++                        barrel1.unpackLootTable(playerInventory.player);
++                        barrel2.unpackLootTable(playerInventory.player);
++                        return ChestMenu.sixRows(syncId, playerInventory, inventory);
++                    }
++                    else
++                    {
++                        return null;
++                    }
++                }
++
++                @Override
++                public Component getDisplayName()
++                {
++                    if (barrel1.hasCustomName())
++                    {
++                        return barrel1.getDisplayName();
++                    }
++                    else if (barrel2.hasCustomName())
++                    {
++                        return barrel2.getDisplayName();
++                    }
++                    return Component.translatable("container.barrel"); //Tumble : Changed from Messenger.tr to now this one.
++//					return Messenger.s("Large Barrel");
++                }
++            });
++        }
++
++        public Optional<MenuProvider> acceptSingle(BarrelBlockEntity barrelBlockEntity)
++        {
++            return Optional.of(barrelBlockEntity);
++        }
++
++        public Optional<MenuProvider> acceptNone()
++        {
++            return Optional.empty();
++        }
++    };
++}
+diff --git a/src/main/java/carpettisaddition/utils/compat/RegistryTypes.java b/src/main/java/carpettisaddition/utils/compat/RegistryTypes.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..15dbd74a492e913c18069ad7d883c17a5fc6cb98
+--- /dev/null
++++ b/src/main/java/carpettisaddition/utils/compat/RegistryTypes.java
+@@ -0,0 +1,53 @@
++/*
++ * This file is part of the Carpet TIS Addition project, licensed under the
++ * GNU Lesser General Public License v3.0
++ *
++ * Copyright (C) 2026  Fallen_Breath and contributors
++ *
++ * Carpet TIS Addition is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * Carpet TIS Addition is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with Carpet TIS Addition.  If not, see <https://www.gnu.org/licenses/>.
++ */
++
++package carpettisaddition.utils.compat;
++
++import net.minecraft.world.entity.EntityType;
++import net.minecraft.world.entity.EntityTypes;
++import net.minecraft.world.entity.item.ItemEntity;
++import net.minecraft.world.entity.monster.Phantom;
++import net.minecraft.world.level.block.entity.BarrelBlockEntity;
++import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
++import net.minecraft.world.level.block.entity.BlockEntityType;
++import net.minecraft.world.level.block.entity.BlockEntityTypes;
++
++/**
++ * For handling the XxxType -> XxxTypes static var home rename from 26.2-snapshot-3
++ * TODO1: find a way to let preprocessor to handle it
++ * Tumble: Let it work.
++ * <p>
++ * mc1.14 ~ mc26.1: subproject 1.15.2 (main project)        <--------
++ * mc26.2+        : subproject 26.2
++ */
++public class RegistryTypes
++{
++    public static class Entity
++    {
++        public static final EntityType<ItemEntity> ITEM = EntityTypes.ITEM;
++        public static final EntityType<Phantom> PHANTOM = EntityTypes.PHANTOM;
++        public static final EntityType<WanderingTrader> WANDERING_TRADER = EntityTypes.WANDERING_TRADER;
++    }
++
++    public static class BlockEntity
++    {
++        public static final BlockEntityType<BarrelBlockEntity> BARREL = BlockEntityTypes.BARREL;
++    }
++}
+diff --git a/src/main/java/org/tumblemc/tumble/carpettisaddition/AbstractStateHelper.java b/src/main/java/org/tumblemc/tumble/carpettisaddition/AbstractStateHelper.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ca4b016b52fdeb01ee8b68269d84a7cbaaec7456
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/carpettisaddition/AbstractStateHelper.java
+@@ -0,0 +1,25 @@
++package org.tumblemc.tumble.carpettisaddition;
++
++import carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper;
++import net.minecraft.core.Direction;
++import org.tumblemc.tumble.config.modules.function.LargeBarrelConfig;
++
++//Tumble start - Carpet TIS addition LargeBarrel ,copy from AbstractStateMixin.
++public class AbstractStateHelper {
++    public static <T extends Comparable<T>> T tweaksGetStateResultForLargeBarrel(T ret)
++    {
++        if (LargeBarrelConfig.enabled)
++        {
++            if (LargeBarrelHelper.applyAxisOnlyDirectionTesting.get())
++            {
++                if (ret instanceof Direction)
++                {
++                    Direction direction = (Direction)ret;
++                    return (T)Direction.fromAxisAndDirection(direction.getAxis(), Direction.AxisDirection.NEGATIVE);
++                }
++            }
++        }
++        return ret;
++    }
++}
++//Tumble end.
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/function/LargeBarrelConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/function/LargeBarrelConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e81e60d5d4628abccda97deaa9829bb65c632a9a
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/function/LargeBarrelConfig.java
+@@ -0,0 +1,12 @@
++package org.tumblemc.tumble.config.modules.function;
++
++import me.earthme.luminol.config.IConfigModule;
++import me.earthme.luminol.config.flags.ConfigClassInfo;
++import me.earthme.luminol.config.flags.ConfigInfo;
++import me.earthme.luminol.enums.EnumConfigCategory;
++
++@ConfigClassInfo(category = EnumConfigCategory.FUNCTION, name = "large_barrel")
++public class LargeBarrelConfig implements IConfigModule {
++    @ConfigInfo(name = "enabled")
++    public static boolean enabled = false;
++}
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index 918269946937d69c07a0519a46e5e8e7d41f2336..58cbdc3958e1fbac0a6f084006276138f560c642 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -199,5 +199,6 @@
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "Allows applying enchantments on tools or armour that are normally not applicable.\nFor example, sharpness on a pickaxe.",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
++  "tumble.function.large_barrel.enabled.comment": "Set whether enable large barrel.",
+   "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed."
+ }
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index b2ad0bea56a2ddd74bcb4d71192477ebe26a4954..f3b61290e5df79b5f7d8583d6b82c1d8b9a5d8e4 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -199,5 +199,6 @@
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "允许在通常不适用该附魔的工具或盔甲上附魔。\n例如：在镐上附魔锋利。",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
++  "tumble.function.large_barrel.enabled.comment": "设置是否开启大木箱.",
+   "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本."
+ }

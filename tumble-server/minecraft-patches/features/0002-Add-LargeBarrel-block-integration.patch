@@ -1,0 +1,170 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Mon, 3 Aug 2026 12:32:41 +0800
+Subject: [PATCH] Add LargeBarrel block integration
+
+
+diff --git a/net/minecraft/world/level/block/BarrelBlock.java b/net/minecraft/world/level/block/BarrelBlock.java
+index 58e92db685204660b41de9bfc0a5092383c8ec18..368e67973dba7aac70da6e5d11621f5b5460d847 100644
+--- a/net/minecraft/world/level/block/BarrelBlock.java
++++ b/net/minecraft/world/level/block/BarrelBlock.java
+@@ -24,6 +24,10 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
+ import net.minecraft.world.phys.BlockHitResult;
+ import org.jspecify.annotations.Nullable;
+ 
++//Tumble start - Carpet TIS Addition LargeBarrel.
++import net.minecraft.world.MenuProvider;
++//Tumble end.
++
+ public class BarrelBlock extends BaseEntityBlock {
+     public static final MapCodec<BarrelBlock> CODEC = simpleCodec(BarrelBlock::new);
+     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+@@ -39,11 +43,27 @@ public class BarrelBlock extends BaseEntityBlock {
+         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+     }
+ 
++    //Tumble start - Carpet TIS Addition LargeBarrel.
++    private MenuProvider largeBarrel(MenuProvider nameableContainerFactory)
++    {
++        if (org.tumblemc.tumble.config.modules.function.LargeBarrelConfig.enabled)
++        {
++            if (nameableContainerFactory instanceof BarrelBlockEntity)
++            {
++                BarrelBlockEntity barrelBlockEntity = (BarrelBlockEntity) nameableContainerFactory;
++                return this.getMenuProvider(barrelBlockEntity.getBlockState(), barrelBlockEntity.getLevel(), barrelBlockEntity.getBlockPos());
++            }
++        }
++        // vanilla result. //Tumble - more detailed comment.
++        return nameableContainerFactory;
++    }
++    //Tumble end.
++
+     @Override
+     protected InteractionResult useWithoutItem(
+         final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult
+     ) {
+-        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof BarrelBlockEntity barrelBlockEntity && player.openMenu(barrelBlockEntity).isPresent()) { // Paper - Fix InventoryOpenEvent cancellation
++        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof BarrelBlockEntity barrelBlockEntity && player.openMenu(largeBarrel(barrelBlockEntity)).isPresent()) { // Paper - Fix InventoryOpenEvent cancellation
+             player.awardStat(Stats.OPEN_BARREL);
+             PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+         }
+@@ -72,6 +92,20 @@ public class BarrelBlock extends BaseEntityBlock {
+         }
+     }
+ 
++    //Tumble start - Carpet TIS addition LargeBarrel.
++    @org.jetbrains.annotations.Nullable
++    @Override
++    public MenuProvider getMenuProvider (BlockState state, Level world, BlockPos pos)
++    {
++        MenuProvider vanillaResult = super.getMenuProvider(state, world, pos);
++        if (org.tumblemc.tumble.config.modules.function.LargeBarrelConfig.enabled)
++        {
++            return carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.getBlockEntitySource(state, world, pos).apply(carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.NAME_RETRIEVER).orElse(vanillaResult);
++        }
++        return vanillaResult;
++    }
++    //Tumble end.
++
+     @Override
+     public @Nullable BlockEntity newBlockEntity(final BlockPos worldPosition, final BlockState blockState) {
+         return new BarrelBlockEntity(worldPosition, blockState);
+@@ -84,6 +118,11 @@ public class BarrelBlock extends BaseEntityBlock {
+ 
+     @Override
+     protected int getAnalogOutputSignal(final BlockState state, final Level level, final BlockPos pos, final Direction direction) {
++        //Tumble start - Carpet TIS addition LargeBarrel.
++        if (org.tumblemc.tumble.config.modules.function.LargeBarrelConfig.enabled){
++            return AbstractContainerMenu.getRedstoneSignalFromContainer(carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.getInventory(state, level, pos));
++        }
++        //Tumble end.
+         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
+     }
+ 
+diff --git a/net/minecraft/world/level/block/DoubleBlockCombiner.java b/net/minecraft/world/level/block/DoubleBlockCombiner.java
+index 560d63ecfef1d65d6fe1e01b8e273f4b2d609304..1fa528fdc949eeec015f419287c28398a14d07c0 100644
+--- a/net/minecraft/world/level/block/DoubleBlockCombiner.java
++++ b/net/minecraft/world/level/block/DoubleBlockCombiner.java
+@@ -46,12 +46,42 @@ public class DoubleBlockCombiner {
+         // Paper end - Don't load Chunks from Hoppers and other things
+         if (neighbourState.is(state.getBlock())) {
+             DoubleBlockCombiner.BlockType neighbourType = typeResolver.apply(neighbourState);
++            //Tumble start - Carpet TIS Addition LargeBarrel.
++            boolean isLargeBarrelEnabled = org.tumblemc.tumble.config.modules.function.LargeBarrelConfig.enabled;
++            if(isLargeBarrelEnabled){
++                if (carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.gettingLargeBarrelPropertySource.get())
++                {
++                    carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.applyAxisOnlyDirectionTesting.set(true);
++                }
++            }
++            var sh1 = neighbourState.getValue(facingProperty);
++            if(isLargeBarrelEnabled){
++                if (carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.gettingLargeBarrelPropertySource.get())
++                {
++                    carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.applyAxisOnlyDirectionTesting.set(false);
++                }
++            }
++            if(isLargeBarrelEnabled){
++                if (carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.gettingLargeBarrelPropertySource.get())
++                {
++                    carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.applyAxisOnlyDirectionTesting.set(true);
++                }
++            }
++            var sh2 = state.getValue(facingProperty);
++            if(isLargeBarrelEnabled){
++                if (carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.gettingLargeBarrelPropertySource.get())
++                {
++                    carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.applyAxisOnlyDirectionTesting.set(false);
++                }
++            }
++            boolean b = sh1 == sh2;
+             if (neighbourType != DoubleBlockCombiner.BlockType.SINGLE
+                 && type != neighbourType
+-                && neighbourState.getValue(facingProperty) == state.getValue(facingProperty)) {
++                && b) {
+                 if (blockedChecker.test(level, neighborPos)) {
+                     return DoubleBlockCombiner.Combiner::acceptNone;
+                 }
++            //Tumble end.
+ 
+                 S neighbour = entityType.getBlockEntity(level, neighborPos);
+                 if (neighbour != null) {
+diff --git a/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/net/minecraft/world/level/block/entity/HopperBlockEntity.java
+index 37c15510d182aa6751827c7ec4d151047101faf8..38ccf958c6843f50189e4d6e03467f07a41ddcd0 100644
+--- a/net/minecraft/world/level/block/entity/HopperBlockEntity.java
++++ b/net/minecraft/world/level/block/entity/HopperBlockEntity.java
+@@ -48,6 +48,9 @@ import org.leavesmc.leaves.lithium.common.tracking.entity.ChunkSectionEntityMove
+ import org.leavesmc.leaves.lithium.common.tracking.entity.ChunkSectionInventoryEntityTracker;
+ import org.leavesmc.leaves.lithium.common.tracking.entity.ChunkSectionItemEntityMovementTracker;
+ // Leaves end - Lithium Sleeping Block Entity
++// Tumble start - Carpet TIS Addition LargeBarrel.
++import net.minecraft.world.level.block.BarrelBlock;
++// Tumble end.
+ 
+ public class HopperBlockEntity extends RandomizableContainerBlockEntity implements Hopper, SleepingBlockEntity, ChunkSectionEntityMovementListener, LithiumInventory, InventoryChangeListener, UpdateReceiver, InventoryChangeTracker { // Leaves - Lithium Sleeping Block Entity
+     public static final int MOVE_ITEM_SPEED = 8;
+@@ -851,6 +854,11 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+     private static @Nullable Container getBlockContainer(final Level level, final BlockPos pos, final BlockState state) {
+         if (!level.spigotConfig.hopperCanLoadChunks && !level.hasChunkAt(pos)) return null; // Spigot
+         Block block = state.getBlock();
++        //Tumble start - Carpet TIS Addition LargeBarrel.
++        if(org.tumblemc.tumble.config.modules.function.LargeBarrelConfig.enabled && block instanceof BarrelBlock){
++            return carpettisaddition.helpers.rule.largeBarrel.LargeBarrelHelper.getInventory(state, level, pos);
++        }
++        //Tumble end.
+         if (block instanceof WorldlyContainerHolder worldlyContainerHolder) {
+             return worldlyContainerHolder.getContainer(state, level, pos);
+         } else if (state.hasBlockEntity() && level.getBlockEntity(pos) instanceof Container container) {
+diff --git a/net/minecraft/world/level/block/state/StateHolder.java b/net/minecraft/world/level/block/state/StateHolder.java
+index 2a5a32ea8757ef9d03d5a9a9cb68be63a31e789a..353db76efcc322d3e657d590f56457e1d3da97cf 100644
+--- a/net/minecraft/world/level/block/state/StateHolder.java
++++ b/net/minecraft/world/level/block/state/StateHolder.java
+@@ -115,7 +115,7 @@ public abstract class StateHolder<O, S> implements ca.spottedleaf.moonrise.patch
+         // Paper start - optimise blockstate property access
+         final T ret = this.optimisedTable.get(this.tableIndex, property);
+         if (ret != null) {
+-            return ret;
++            return org.tumblemc.tumble.carpettisaddition.AbstractStateHelper.tweaksGetStateResultForLargeBarrel(ret); //Tumble - Carpet TIS addition LargeBarrel.
+         }
+         // Lophine start - catch update suppression crash
+         IllegalArgumentException iae = new IllegalArgumentException("Cannot get property " + property + " as it does not exist in " + this.owner);
