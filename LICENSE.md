@@ -7,3 +7,5 @@ Unless explicitly stated otherwise, Tumble contributions are released under the 
 upstream authors release their contributions under the more permissive
 [MIT License](licenses/MIT.md); consult the corresponding upstream projects and source headers
 for details.
+
+Some Tumble code is introduced from other projects that are licensed under different licenses. Their licenses remain.

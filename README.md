@@ -3,6 +3,10 @@
 Tumble is a Minecraft server fork based on [Lophine](https://github.com/LophineLabs/Lophine).
 It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 26.2.
 
+## Features
+- Purpur Anvil Setting.
+- Carpet TIS Addition LargeBarrel Support.
+
 ## Requirements
 
 - Git
@@ -17,7 +21,9 @@ It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 2
 
 The runnable server JAR is generated in `tumble-server/build/libs`.
 
-## Development
+## Development & Contribution
+
+TumbleMC welcomes everyone to contribute. Follow the instructions below to contribute your code!  
 
 Apply the patch stack before editing sources:
 
