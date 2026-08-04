@@ -5,6 +5,7 @@ It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 2
 
 ## Features
 - Purpur Anvil Setting.
+- Configuration to bypass anvil "Too Expensive!" limit.
 - Carpet TIS Addition LargeBarrel Support.
 
 ## Requirements
