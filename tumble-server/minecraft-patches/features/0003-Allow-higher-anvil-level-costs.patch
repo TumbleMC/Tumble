@@ -5,7 +5,7 @@ Subject: [PATCH] Allow higher anvil level costs
 
 
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 68e36ad03325cd6348dc4bbab37409b70bee6023..c4a71fbcfaac5e913c0aca918d1cc1c3ed8c2150 100644
+index 68e36ad03325cd6348dc4bbab37409b70bee6023..3f4e27c39ec6478e7b0cd582f771520264a9aae3 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
 @@ -2906,7 +2906,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
@@ -16,7 +16,7 @@ index 68e36ad03325cd6348dc4bbab37409b70bee6023..c4a71fbcfaac5e913c0aca918d1cc1c3
 +            // Tumble start - Allow higher anvil level costs
 +            net.minecraft.world.entity.player.Abilities clientAbilities = this.getAbilities();
 +            if (this.containerMenu instanceof net.minecraft.world.inventory.AnvilMenu anvilMenu
-+                && anvilMenu.isClientAnvilCostLimitBypassed()
++                && anvilMenu.clientAnvilCostLimitBypassed
 +                && !clientAbilities.instabuild) {
 +                net.minecraft.world.entity.player.Abilities spoofedAbilities = new net.minecraft.world.entity.player.Abilities();
 +                spoofedAbilities.apply(clientAbilities.pack());
@@ -30,7 +30,7 @@ index 68e36ad03325cd6348dc4bbab37409b70bee6023..c4a71fbcfaac5e913c0aca918d1cc1c3
          }
      }
 diff --git a/net/minecraft/world/inventory/AnvilMenu.java b/net/minecraft/world/inventory/AnvilMenu.java
-index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b028fce938 100644
+index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..a59ead991599b48a35ca6e0ea63e0a036bea7d93 100644
 --- a/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/net/minecraft/world/inventory/AnvilMenu.java
 @@ -35,6 +35,20 @@ public class AnvilMenu extends ItemCombinerMenu {
@@ -49,7 +49,7 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b0
 +            AnvilMenu.this.cost.set(value);
 +        }
 +    };
-+    private boolean clientAnvilCostLimitBypassed;
++    public boolean clientAnvilCostLimitBypassed;
 +    // Tumble end - Allow higher anvil level costs
      private boolean onlyRenaming = false;
      private static final int COST_FAIL = 0;
@@ -62,13 +62,13 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b0
 +        // Tumble start - Allow higher anvil level costs
 +        this.addDataSlot(this.clientCost);
 +        if (org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_higher_levels_cost) {
-+            this.maximumRepairCost = Short.MAX_VALUE + 1;
++            this.maximumRepairCost = Integer.MAX_VALUE - 1;
 +        }
 +        // Tumble end - Allow higher anvil level costs
      }
  
      private static ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
-@@ -82,6 +101,26 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -82,6 +101,23 @@ public class AnvilMenu extends ItemCombinerMenu {
          return state.is(BlockTags.ANVIL);
      }
  
@@ -87,15 +87,12 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b0
 +        this.finishClientAnvilCostLimitBypass(shouldBypassClientLimit);
 +    }
 +
-+    public boolean isClientAnvilCostLimitBypassed() {
-+        return this.clientAnvilCostLimitBypassed;
-+    }
 +    // Tumble end - Allow higher anvil level costs
 +
      @Override
      protected boolean mayPickup(final Player player, final boolean hasItem) {
          return (player.hasInfiniteMaterials() || player.experienceLevel >= this.cost.get()) && this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST && hasItem; // CraftBukkit - allow cost 0 like a free item
-@@ -145,6 +184,14 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -145,6 +181,14 @@ public class AnvilMenu extends ItemCombinerMenu {
          });
      }
  
@@ -110,7 +107,18 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b0
      @Override
      public void createResult() {
          // Tumble start - Purpur Anvil API
-@@ -332,7 +379,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -230,9 +274,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+                         java.util.Set<Holder<Enchantment>> removedEnchantments = new java.util.HashSet<>(); // Tumble - Config to allow unsafe enchants
+                         for (Holder<Enchantment> other : enchantments.keySet()) {
+                             if (!other.equals(enchantmentHolder) && !Enchantment.areCompatible(enchantmentHolder, other)) {
+-                                canEnchant1 = this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
+-//                                        || org.purpurmc.purpur.PurpurConfig.allowIncompatibleEnchants
+-                                ; // Tumble - Purpur Anvil API // Tumble - canEnchant -> canEnchant1 - Config to allow unsafe enchants
++                                canEnchant1 = this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants; // Tumble - Purpur Anvil API // Tumble - canEnchant -> canEnchant1 - Config to allow unsafe enchants
+                                 // Tumble start - Config to allow unsafe enchants
+                                 if (!canEnchant1 && org.tumblemc.tumble.config.modules.function.AnvilConfig.replace_incompatible_enchants) {
+                                     removedEnchantments.add(other);
+@@ -332,7 +374,7 @@ public class AnvilMenu extends ItemCombinerMenu {
              if ((this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_inapplicable_enchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
              ) && result != ItemStack.EMPTY) { // Tumble - Config to allow unsafe enchants
                  ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 2, result));
@@ -119,28 +127,25 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b0
              }
              // Tumble end - Purpur Anvil API
          } else {
-@@ -376,6 +423,49 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -376,6 +418,46 @@ public class AnvilMenu extends ItemCombinerMenu {
          return this.cost.get();
      }
  
 +    // Tumble start - Allow higher anvil level costs
 +    private int getClientCost() {
-+        return Math.min(this.cost.get(), Short.MAX_VALUE);
-+    }
-+
-+    private boolean shouldBypassClientAnvilCostLimit() {
-+        int actualCost = this.cost.get();
-+        return this.maximumRepairCost > 40
-+            && actualCost >= 40
-+            && actualCost <= Short.MAX_VALUE
-+            && this.getSlot(RESULT_SLOT).hasItem()
-+            && this.player instanceof ServerPlayer serverPlayer
-+            && serverPlayer.containerMenu == this
-+            && !serverPlayer.hasInfiniteMaterials();
++        return Math.min(this.cost.get(), Integer.MAX_VALUE);
 +    }
 +
 +    private boolean prepareClientAnvilCostLimitBypass() {
-+        boolean shouldBypassClientLimit = this.shouldBypassClientAnvilCostLimit();
++        boolean shouldBypassClientLimit;
++        int actualCost = this.cost.get();
++        shouldBypassClientLimit = org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_higher_levels_cost
++                && actualCost >= 40
++                && actualCost <= Integer.MAX_VALUE - 1
++                && this.getSlot(RESULT_SLOT).hasItem()
++                && this.player instanceof ServerPlayer serverPlayer
++                && serverPlayer.containerMenu == this
++                && !serverPlayer.hasInfiniteMaterials();
 +        if (shouldBypassClientLimit && !this.clientAnvilCostLimitBypassed) {
 +            this.setClientAnvilCostLimitBypassed(true);
 +        }
