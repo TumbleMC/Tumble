@@ -1,0 +1,171 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ingilying <ingilying@outlook.com>
+Date: Tue, 4 Aug 2026 13:41:12 +0800
+Subject: [PATCH] Allow higher anvil level costs
+
+
+diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
+index 68e36ad03325cd6348dc4bbab37409b70bee6023..c4a71fbcfaac5e913c0aca918d1cc1c3ed8c2150 100644
+--- a/net/minecraft/server/level/ServerPlayer.java
++++ b/net/minecraft/server/level/ServerPlayer.java
+@@ -2906,7 +2906,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+     @Override
+     public void onUpdateAbilities() {
+         if (this.connection != null) {
+-            this.connection.send(new ClientboundPlayerAbilitiesPacket(this.getAbilities()));
++            // Tumble start - Allow higher anvil level costs
++            net.minecraft.world.entity.player.Abilities clientAbilities = this.getAbilities();
++            if (this.containerMenu instanceof net.minecraft.world.inventory.AnvilMenu anvilMenu
++                && anvilMenu.isClientAnvilCostLimitBypassed()
++                && !clientAbilities.instabuild) {
++                net.minecraft.world.entity.player.Abilities spoofedAbilities = new net.minecraft.world.entity.player.Abilities();
++                spoofedAbilities.apply(clientAbilities.pack());
++                spoofedAbilities.instabuild = true;
++                clientAbilities = spoofedAbilities;
++            }
++
++            this.connection.send(new ClientboundPlayerAbilitiesPacket(clientAbilities));
++            // Tumble end - Allow higher anvil level costs
+             this.updateInvisibilityStatus();
+         }
+     }
+diff --git a/net/minecraft/world/inventory/AnvilMenu.java b/net/minecraft/world/inventory/AnvilMenu.java
+index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..19480a27bbf3ebf0a27b47855eb8a2b028fce938 100644
+--- a/net/minecraft/world/inventory/AnvilMenu.java
++++ b/net/minecraft/world/inventory/AnvilMenu.java
+@@ -35,6 +35,20 @@ public class AnvilMenu extends ItemCombinerMenu {
+     public int repairItemCountCost;
+     public @Nullable String itemName;
+     public final DataSlot cost = DataSlot.standalone();
++    // Tumble start - Allow higher anvil level costs
++    private final DataSlot clientCost = new DataSlot() {
++        @Override
++        public int get() {
++            return AnvilMenu.this.getClientCost();
++        }
++
++        @Override
++        public void set(final int value) {
++            AnvilMenu.this.cost.set(value);
++        }
++    };
++    private boolean clientAnvilCostLimitBypassed;
++    // Tumble end - Allow higher anvil level costs
+     private boolean onlyRenaming = false;
+     private static final int COST_FAIL = 0;
+     private static final int COST_BASE = 1;
+@@ -66,7 +80,12 @@ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     public AnvilMenu(final int containerId, final Inventory inventory, final ContainerLevelAccess access) {
+         super(MenuType.ANVIL, containerId, inventory, access, createInputSlotDefinitions());
+-        this.addDataSlot(this.cost);
++        // Tumble start - Allow higher anvil level costs
++        this.addDataSlot(this.clientCost);
++        if (org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_higher_levels_cost) {
++            this.maximumRepairCost = Short.MAX_VALUE + 1;
++        }
++        // Tumble end - Allow higher anvil level costs
+     }
+ 
+     private static ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
+@@ -82,6 +101,26 @@ public class AnvilMenu extends ItemCombinerMenu {
+         return state.is(BlockTags.ANVIL);
+     }
+ 
++    // Tumble start - Allow higher anvil level costs
++    @Override
++    public void broadcastChanges() {
++        boolean shouldBypassClientLimit = this.prepareClientAnvilCostLimitBypass();
++        super.broadcastChanges();
++        this.finishClientAnvilCostLimitBypass(shouldBypassClientLimit);
++    }
++
++    @Override
++    public void sendAllDataToRemote() {
++        boolean shouldBypassClientLimit = this.prepareClientAnvilCostLimitBypass();
++        super.sendAllDataToRemote();
++        this.finishClientAnvilCostLimitBypass(shouldBypassClientLimit);
++    }
++
++    public boolean isClientAnvilCostLimitBypassed() {
++        return this.clientAnvilCostLimitBypassed;
++    }
++    // Tumble end - Allow higher anvil level costs
++
+     @Override
+     protected boolean mayPickup(final Player player, final boolean hasItem) {
+         return (player.hasInfiniteMaterials() || player.experienceLevel >= this.cost.get()) && this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST && hasItem; // CraftBukkit - allow cost 0 like a free item
+@@ -145,6 +184,14 @@ public class AnvilMenu extends ItemCombinerMenu {
+         });
+     }
+ 
++    // Tumble start - Allow higher anvil level costs
++    @Override
++    public void removed(final Player player) {
++        this.setClientAnvilCostLimitBypassed(false);
++        super.removed(player);
++    }
++    // Tumble end - Allow higher anvil level costs
++
+     @Override
+     public void createResult() {
+         // Tumble start - Purpur Anvil API
+@@ -332,7 +379,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+             if ((this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_inapplicable_enchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
+             ) && result != ItemStack.EMPTY) { // Tumble - Config to allow unsafe enchants
+                 ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 2, result));
+-                ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetDataPacket(this.containerId, 0, this.cost.get()));
++                ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetDataPacket(this.containerId, 0, this.getClientCost())); // Tumble - Allow higher anvil level costs
+             }
+             // Tumble end - Purpur Anvil API
+         } else {
+@@ -376,6 +423,49 @@ public class AnvilMenu extends ItemCombinerMenu {
+         return this.cost.get();
+     }
+ 
++    // Tumble start - Allow higher anvil level costs
++    private int getClientCost() {
++        return Math.min(this.cost.get(), Short.MAX_VALUE);
++    }
++
++    private boolean shouldBypassClientAnvilCostLimit() {
++        int actualCost = this.cost.get();
++        return this.maximumRepairCost > 40
++            && actualCost >= 40
++            && actualCost <= Short.MAX_VALUE
++            && this.getSlot(RESULT_SLOT).hasItem()
++            && this.player instanceof ServerPlayer serverPlayer
++            && serverPlayer.containerMenu == this
++            && !serverPlayer.hasInfiniteMaterials();
++    }
++
++    private boolean prepareClientAnvilCostLimitBypass() {
++        boolean shouldBypassClientLimit = this.shouldBypassClientAnvilCostLimit();
++        if (shouldBypassClientLimit && !this.clientAnvilCostLimitBypassed) {
++            this.setClientAnvilCostLimitBypassed(true);
++        }
++
++        return shouldBypassClientLimit;
++    }
++
++    private void finishClientAnvilCostLimitBypass(final boolean shouldBypassClientLimit) {
++        if (!shouldBypassClientLimit && this.clientAnvilCostLimitBypassed) {
++            this.setClientAnvilCostLimitBypassed(false);
++        }
++    }
++
++    private void setClientAnvilCostLimitBypassed(final boolean bypassed) {
++        if (this.clientAnvilCostLimitBypassed == bypassed) {
++            return;
++        }
++
++        this.clientAnvilCostLimitBypassed = bypassed;
++        if (this.player instanceof ServerPlayer serverPlayer) {
++            serverPlayer.onUpdateAbilities();
++        }
++    }
++    // Tumble end - Allow higher anvil level costs
++
+     // CraftBukkit start
+     @Override
+     public org.bukkit.craftbukkit.inventory.view.CraftAnvilView getBukkitView() {

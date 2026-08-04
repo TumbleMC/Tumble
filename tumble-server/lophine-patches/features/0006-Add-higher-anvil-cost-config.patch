@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ingilying <ingilying@outlook.com>
+Date: Tue, 4 Aug 2026 13:41:12 +0800
+Subject: [PATCH] Add higher anvil cost config
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java
+index fcc8a6f670a03ff20862c418566a8e0eadf03646..525f29ed456967c77fe166c8d988fe3d14febf00 100644
+--- a/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java
++++ b/src/main/java/org/tumblemc/tumble/config/modules/function/AnvilConfig.java
+@@ -15,4 +15,6 @@ public class AnvilConfig implements IConfigModule {
+     public static boolean allow_higher_enchants_levels = false;
+     @ConfigInfo(name = "replace_incompatible_enchants")
+     public static boolean replace_incompatible_enchants = false;
++    @ConfigInfo(name = "allow_higher_levels_cost")
++    public static boolean allow_higher_levels_cost = false;
+ }
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index 58cbdc3958e1fbac0a6f084006276138f560c642..add3df6db86eb35723dbdf05a3fc2515493c1d25 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -196,6 +196,7 @@
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "Disable check for folia-supported for leaves plugin.\nATTENTION: No support will be provided if you enabled this.",
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "Disable check for folia-supported for spigot/bukkit/paper plugin.\nATTENTION: No support will be provided if you enabled this.",
+   "tumble.function.anvil.allow_higher_enchants_levels.comment": "Allows the ability to increase enchantments passed their maximum level.\nFor example, efficiency V + efficiency V = efficiency VI.",
++  "tumble.function.anvil.allow_higher_levels_cost.comment": "Allows anvil operations to cost 40 or more experience levels.",
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "Allows applying enchantments on tools or armour that are normally not applicable.\nFor example, sharpness on a pickaxe.",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index f3b61290e5df79b5f7d8583d6b82c1d8b9a5d8e4..4a1773181d16fcf92e1d32c86ac547a2f2fa38db 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -196,6 +196,7 @@
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "禁用对 leaves 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
+   "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "禁用对 spigot/bukkit/paper 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
+   "tumble.function.anvil.allow_higher_enchants_levels.comment": "允许附魔等级超过最大等级。\n例如：效率 V + 效率 V = 效率 VI。",
++  "tumble.function.anvil.allow_higher_levels_cost.comment": "允许执行花费 40 级或更多经验等级的铁砧操作。",
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "允许在通常不适用该附魔的工具或盔甲上附魔。\n例如：在镐上附魔锋利。",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
