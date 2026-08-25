@@ -20,8 +20,10 @@ plugins {
 
 rootProject.name = "tumble"
 
-include("tumble-api")
-include("tumble-server")
+for(name in listOf("tumble-api","tumble-server","tumble-checkstyle")){
+    include(name)
+    File(name).mkdirs()
+}
 
 gradle.lifecycle.beforeProject {
     val mcVersion = providers.gradleProperty("mcVersion").get().trim()
@@ -33,3 +35,5 @@ gradle.lifecycle.beforeProject {
         "$mcVersion.build.$buildNumber-$channel"
     }
 }
+
+include("tumble-checkstyle")

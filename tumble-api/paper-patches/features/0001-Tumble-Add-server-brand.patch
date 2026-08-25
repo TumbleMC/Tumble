@@ -5,10 +5,10 @@ Subject: [PATCH] Tumble: Add server brand
 
 
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfo.java b/src/main/java/io/papermc/paper/ServerBuildInfo.java
-index 1727ea0b873ee4f9a86cca62eac6dc3a5063b4e6..aee2470c2625e9a4fb1e53acbe3448789c4c2696 100644
+index d9127bc6c5801521a5dd1171e4e215f241934034..f59c88c9799bd7c61548c706642c8d867afb78dc 100644
 --- a/src/main/java/io/papermc/paper/ServerBuildInfo.java
 +++ b/src/main/java/io/papermc/paper/ServerBuildInfo.java
-@@ -30,6 +30,13 @@ public interface ServerBuildInfo {
+@@ -28,6 +28,13 @@ public interface ServerBuildInfo {
      Key BRAND_LOPHINE_ID = Key.key("lophinelabs", "lophine");
      // Lophine end
  
