@@ -22,10 +22,25 @@ paperweight {
             outputFile = file("tumble-api/build.gradle.kts")
             patchFile = file("tumble-api/build.gradle.kts.patch")
         }
+        patchFile {
+            path = "lophine-checkstyle/build.gradle.kts"
+            outputFile = file("tumble-checkstyle/build.gradle.kts")
+            patchFile = file("tumble-checkstyle/build.gradle.kts.patch")
+        }
         patchRepo("paperApi") {
             upstreamPath = "paper-api"
             patchesDir = file("tumble-api/paper-patches")
             outputDir = file("paper-api")
+        }
+        patchRepo("paperCheckstyle") {
+            upstreamPath = "paper-checkstyle"
+            patchesDir = file("tumble-checkstyle/paper-patches")
+            outputDir = file("paper-checkstyle")
+        }
+        patchRepo("paperCheckstyleConfig") {
+            upstreamPath = ".checkstyle"
+            patchesDir = file("tumble-checkstyle/config-patches")
+            outputDir = file(".checkstyle")
         }
         patchDir("lophineApi") {
             upstreamPath = "lophine-api"

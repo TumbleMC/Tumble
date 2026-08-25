@@ -5,6 +5,7 @@ run/
 
 /tumble-api/build.gradle.kts
 /tumble-server/build.gradle.kts
+/tumble-checkstyle/build.gradle.kts
 /lophine-api/
 /lophine-server/
 /paper-api/
@@ -12,3 +13,5 @@ run/
 /folia-api/
 /folia-server/
 /paper-api-generator/
+/paper-checkstyle
+/.checkstyle

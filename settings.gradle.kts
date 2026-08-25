@@ -22,6 +22,7 @@ rootProject.name = "tumble"
 
 include("tumble-api")
 include("tumble-server")
+include("tumble-checkstyle")
 
 gradle.lifecycle.beforeProject {
     val mcVersion = providers.gradleProperty("mcVersion").get().trim()
@@ -33,3 +34,5 @@ gradle.lifecycle.beforeProject {
         "$mcVersion.build.$buildNumber-$channel"
     }
 }
+
+include("tumble-checkstyle")
