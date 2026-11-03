@@ -5,10 +5,10 @@ Subject: [PATCH] Tumble: Rebrand server
 
 
 diff --git a/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java b/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
-index 347f9462a97d2b150730c81d4fbded57291802b9..7ed5c081433b0193ecaee20ad3cc7277e0e2c37d 100644
+index 4bc86f40c5fa2006ff990ba08cb1b89b1049a826..de4b4224f8168c65f8fb9ac66b039c64241939cb 100644
 --- a/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
 +++ b/src/main/java/me/earthme/luminol/config/modules/misc/ServerModNameConfig.java
-@@ -7,7 +7,7 @@ import me.earthme.luminol.enums.EnumConfigCategory;
+@@ -7,7 +7,7 @@ import me.earthme.luminol.api.config.enums.EnumConfigCategory;
  @ConfigClassInfo(category = EnumConfigCategory.MISC, name = "server_mod_name")
  public class ServerModNameConfig {
      @ConfigInfo(name = "name")

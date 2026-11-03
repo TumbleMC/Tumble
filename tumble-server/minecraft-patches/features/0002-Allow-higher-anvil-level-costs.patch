@@ -5,10 +5,10 @@ Subject: [PATCH] Allow higher anvil level costs
 
 
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 68e36ad03325cd6348dc4bbab37409b70bee6023..3f4e27c39ec6478e7b0cd582f771520264a9aae3 100644
+index 0c88741c02622a2e00deb8c8e89af8d8cc2dd1c2..6d68155a27dab82cbd15b82dea55892733994f91 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -2906,7 +2906,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -3150,7 +3150,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
      @Override
      public void onUpdateAbilities() {
          if (this.connection != null) {
@@ -30,7 +30,7 @@ index 68e36ad03325cd6348dc4bbab37409b70bee6023..3f4e27c39ec6478e7b0cd582f7715202
          }
      }
 diff --git a/net/minecraft/world/inventory/AnvilMenu.java b/net/minecraft/world/inventory/AnvilMenu.java
-index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..a59ead991599b48a35ca6e0ea63e0a036bea7d93 100644
+index a835bc3f16478e51e111916b844e516168f91f82..95714498e2e6b036f63a2b51f291a3c09a822766 100644
 --- a/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/net/minecraft/world/inventory/AnvilMenu.java
 @@ -35,6 +35,20 @@ public class AnvilMenu extends ItemCombinerMenu {
@@ -107,7 +107,7 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..a59ead991599b48a35ca6e0ea63e0a03
      @Override
      public void createResult() {
          // Tumble start - Purpur Anvil API
-@@ -230,9 +274,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -233,9 +277,7 @@ public class AnvilMenu extends ItemCombinerMenu {
                          java.util.Set<Holder<Enchantment>> removedEnchantments = new java.util.HashSet<>(); // Tumble - Config to allow unsafe enchants
                          for (Holder<Enchantment> other : enchantments.keySet()) {
                              if (!other.equals(enchantmentHolder) && !Enchantment.areCompatible(enchantmentHolder, other)) {
@@ -118,7 +118,7 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..a59ead991599b48a35ca6e0ea63e0a03
                                  // Tumble start - Config to allow unsafe enchants
                                  if (!canEnchant1 && org.tumblemc.tumble.config.modules.function.AnvilConfig.replace_incompatible_enchants) {
                                      removedEnchantments.add(other);
-@@ -332,7 +374,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -337,7 +379,7 @@ public class AnvilMenu extends ItemCombinerMenu {
              if ((this.canDoUnsafeEnchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_inapplicable_enchants || org.tumblemc.tumble.config.modules.function.AnvilConfig.allow_incompatible_enchants
              ) && result != ItemStack.EMPTY) { // Tumble - Config to allow unsafe enchants
                  ((ServerPlayer) this.player).connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 2, result));
@@ -127,7 +127,7 @@ index c01e92b8831ab40255dfbcf9ac68b2771d3ec698..a59ead991599b48a35ca6e0ea63e0a03
              }
              // Tumble end - Purpur Anvil API
          } else {
-@@ -376,6 +418,46 @@ public class AnvilMenu extends ItemCombinerMenu {
+@@ -381,6 +423,46 @@ public class AnvilMenu extends ItemCombinerMenu {
          return this.cost.get();
      }
  

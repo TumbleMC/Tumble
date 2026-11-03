@@ -1,6 +1,6 @@
 # AGENTS.md
 
-面向 AI 智能体与开发者的 Tumble 项目操作指南。Tumble 是一个基于 Lophine 的 Minecraft 服务端分支，使用 ComfreyWeight（paperweight 2.0 风格）补丁系统，目标 Minecraft 版本 26.2。
+面向 AI 智能体与开发者的 Tumble 项目操作指南。Tumble 是一个基于 Lophine 的 Minecraft 服务端分支，使用 ComfreyWeight（paperweight 2.0 风格）补丁系统，目标 Minecraft 版本 26.3。
 
 ## 核心概念：补丁系统如何运作
 

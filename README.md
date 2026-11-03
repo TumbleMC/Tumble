@@ -1,12 +1,13 @@
 # Tumble
 
 Tumble is a Minecraft server fork based on [Lophine](https://github.com/LophineLabs/Lophine).
-It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 26.2.
+It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 26.3.
 
 ## Features
 - Purpur Anvil Setting.
 - Configuration to bypass anvil "Too Expensive!" limit.
-- Carpet TIS Addition LargeBarrel Support.
+
+LargeBarrel is provided by upstream Lophine (large_barrel carpet rule) and is no longer carried as a Tumble patch.
 
 ## Requirements
 
