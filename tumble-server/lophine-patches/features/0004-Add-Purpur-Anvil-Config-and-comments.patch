@@ -28,10 +28,10 @@ index 0000000000000000000000000000000000000000..e5e89a4fe5daad6cc97bf157509a87e8
 +    public static boolean replace_incompatible_enchants = false;
 +}
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index 9e57d462af98d35c1fa91ef57738040fd7594fa5..f0303de53bf79808bef9b9ea7b1a0c61b91a491e 100644
+index 942cbab6de329962aae5edb95556adbe7c69e7cf..aebf201e77f2059d9298871e35248d741a7cfe23 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1581,6 +1581,11 @@
+@@ -1583,6 +1583,11 @@
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "Disable check for folia-supported for leaves plugin.\nATTENTION: No support will be provided if you enabled this.",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper": "Disable check for spigot/bukkit/paper plugin",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "Disable check for folia-supported for spigot/bukkit/paper plugin.\nATTENTION: No support will be provided if you enabled this.",
@@ -44,10 +44,10 @@ index 9e57d462af98d35c1fa91ef57738040fd7594fa5..f0303de53bf79808bef9b9ea7b1a0c61
    "vanilla.command.save-all.refactor.already": "Server is already in saving! Please wait...",
    "vanilla.command.save-all.refactor.failure": "At least one region failed to save!",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index 1ebe125ac4b1e8afce82d9b5d234eae3521729cd..04f34e094ecf8ee1cd23c68cb54335197d16dcf0 100644
+index 119e89e8181e41422c8255765a066ca23552376e..8118b75454b6bed8e9350ce09097e0746ecb0af7 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1581,6 +1581,11 @@
+@@ -1583,6 +1583,11 @@
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_leaves.comment": "禁用对 leaves 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper": "禁用 spigot/bukkit/paper 插件检查",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "禁用对 spigot/bukkit/paper 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",

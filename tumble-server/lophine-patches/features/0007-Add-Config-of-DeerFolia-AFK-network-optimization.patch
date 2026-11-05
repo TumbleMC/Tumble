@@ -1,0 +1,108 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Thu, 5 Nov 2026 23:43:06 +0800
+Subject: [PATCH] Add Config of DeerFolia AFK network optimization
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/optimizations/AfkNetworkConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/optimizations/AfkNetworkConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5da3ef09efd2692e66f39732303c011332bad39b
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/optimizations/AfkNetworkConfig.java
+@@ -0,0 +1,53 @@
++package org.tumblemc.tumble.config.modules.optimizations;
++
++import cn.lunadeer.mc.deerfolia.afknetwork.AfkNetworkManager;
++import me.earthme.luminol.api.config.annotation.ConfigClassInfo;
++import me.earthme.luminol.api.config.annotation.ConfigInfo;
++import me.earthme.luminol.api.config.annotation.NeedRun;
++import me.earthme.luminol.api.config.enums.EnumConfigCategory;
++import me.earthme.luminol.api.config.enums.EnumRunnableType;
++
++
++import java.util.List;
++
++@ConfigClassInfo(category = EnumConfigCategory.OPTIMIZATIONS, name = "afk_network")
++public class AfkNetworkConfig {
++    @ConfigInfo(name = "enabled")
++    public static boolean enabled = true;
++
++    @ConfigInfo(name = "afk_threshold_ticks")
++    public static int afkThresholdTicks = 20 * 60;
++
++    @ConfigInfo(name = "afk_message_enabled")
++    public static boolean afkMessageEnabled = true;
++
++    @ConfigInfo(name = "afk_enter_message")
++    public static String afkEnterMessage = "&7[AFKNet] &eYou are now AFK. &7Tumble will temporarily suppress non-essential packets.";
++
++    @ConfigInfo(name = "afk_exit_message")
++    public static String afkExitMessage = "&7[AFKNet] &aWelcome back! &7This AFK session saved &b{saved_traffic} &7traffic, peak &b{saved_bandwidth}.";
++
++    @ConfigInfo(name = "count_look_changes_as_activity")
++    public static boolean countLookChangesAsActivity = true;
++
++    @ConfigInfo(name = "resync_on_resume")
++    public static boolean resyncOnResume = true;
++
++    @ConfigInfo(name = "stats_enabled")
++    public static boolean statsEnabled = true;
++
++    @ConfigInfo(name = "suppression_whitelist_categories")
++    public static List<String> suppressionWhitelistCategories = List.of();
++
++    @ConfigInfo(name = "max_suppressed_bytes_before_category_resync")
++    public static long maxSuppressedBytesBeforeCategoryResync = -1L;
++
++    @NeedRun(when = EnumRunnableType.ON_LOADED)
++    public void onLoaded() {
++        if (afkThresholdTicks < 1) afkThresholdTicks = 1;
++        afkEnterMessage = afkEnterMessage == null ? "" : afkEnterMessage.trim();
++        afkExitMessage = afkExitMessage == null ? "" : afkExitMessage.trim();
++        if (maxSuppressedBytesBeforeCategoryResync < -1L) maxSuppressedBytesBeforeCategoryResync = -1L;
++        AfkNetworkManager.refreshConfiguration();
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index ef8404c95b8b76c47cdb1a83b174ecf6e649e54c..524deb0ce3bbf8a91e0625a19f866ae1831a66bd 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -1589,6 +1589,16 @@
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
+   "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed.",
++  "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
++  "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
++  "tumble.optimizations.afk_network.afk_message_enabled.comment": "Send the AFK enter/exit messages to players.",
++  "tumble.optimizations.afk_network.afk_threshold_ticks.comment": "Ticks without activity before a player is considered AFK. 20 ticks = 1 second.",
++  "tumble.optimizations.afk_network.count_look_changes_as_activity.comment": "Count rotation-only changes as activity.",
++  "tumble.optimizations.afk_network.enabled.comment": "Suppress non-essential packets for AFK players to save bandwidth.",
++  "tumble.optimizations.afk_network.max_suppressed_bytes_before_category_resync.comment": "Estimated suppressed bytes per player and category before forcing a category refresh. -1 means unlimited.",
++  "tumble.optimizations.afk_network.resync_on_resume.comment": "Force a full nearby chunk and entity resync when the player becomes active again.",
++  "tumble.optimizations.afk_network.stats_enabled.comment": "Collect statistics for /afknetstats.",
++  "tumble.optimizations.afk_network.suppression_whitelist_categories.comment": "Categories that keep passing through while AFK. Valid values: chunk-stream, block-updates, entity-stream, world-effects, ui-stream.",
+   "vanilla.command.datapack.restart": "You need to restart server to load datapacks update.",
+   "vanilla.command.save-all.refactor.already": "Server is already in saving! Please wait...",
+   "vanilla.command.save-all.refactor.failure": "At least one region failed to save!",
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index cba3e8de1e1e813ae994c3c5da26b8386e45a71a..edcaab19db6c871a99dbb15675a808f658a69540 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -1589,6 +1589,16 @@
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
+   "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本.",
++  "tumble.optimizations.afk_network.afk_enter_message.comment": "玩家进入挂机状态时发送一次。占位符:{player}。留空则关闭。支持 & 与 &#RRGGBB 颜色代码。",
++  "tumble.optimizations.afk_network.afk_exit_message.comment": "玩家恢复活动时发送。占位符:{player}、{saved_traffic}、{saved_bandwidth}。留空则关闭。",
++  "tumble.optimizations.afk_network.afk_message_enabled.comment": "是否向玩家发送挂机进入/退出提示消息。",
++  "tumble.optimizations.afk_network.afk_threshold_ticks.comment": "无活动多少刻后判定为挂机。20 刻 = 1 秒。",
++  "tumble.optimizations.afk_network.count_look_changes_as_activity.comment": "仅转动视角是否算作活动。",
++  "tumble.optimizations.afk_network.enabled.comment": "对挂机玩家抑制非必要数据包以节省带宽。",
++  "tumble.optimizations.afk_network.max_suppressed_bytes_before_category_resync.comment": "单个玩家单个类别累计抑制的估算字节数,达到该值后强制刷新该类别。-1 表示不限制。",
++  "tumble.optimizations.afk_network.resync_on_resume.comment": "玩家恢复活动时强制重新同步附近区块与实体。",
++  "tumble.optimizations.afk_network.stats_enabled.comment": "是否为 /afknetstats 收集统计数据。",
++  "tumble.optimizations.afk_network.suppression_whitelist_categories.comment": "挂机期间仍然放行的类别。可选值:chunk-stream、block-updates、entity-stream、world-effects、ui-stream。",
+   "vanilla.command.datapack.restart": "你需要重启服务器来应用数据包更改。",
+   "vanilla.command.save-all.refactor.already": "服务器已经在保存中，请等待保存完成……",
+   "vanilla.command.save-all.refactor.failure": "至少有一个区域调度器保存数据失败！",
