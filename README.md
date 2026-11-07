@@ -12,6 +12,9 @@ It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 2
 - Bedrock-style stronghold generation, ported from [DeerFoliaPlus](https://github.com/LunaDeerMC/DeerFoliaPlus):
   replaces the 128 ring-based strongholds with an infinite random distribution, or keeps the
   vanilla rings and randomizes only outside the ring zone (`keep_vanilla_rings`).
+- Vanilla structure generation fixes, ported from the same project: 44 individually switchable
+  template repairs (villages, trail ruins, trial chambers, bastions, ancient cities, abandoned
+  camps/trees) plus a master switch. Restart required; only newly generated structures change.
 
 LargeBarrel is provided by upstream Lophine (large_barrel carpet rule) and is no longer carried as a Tumble patch.
 

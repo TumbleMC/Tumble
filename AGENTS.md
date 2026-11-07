@@ -87,11 +87,13 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 
 ## 配置项（config）开发规范
 
-- 配置文件类位于 `lophine-server/src/main/java/fun/bm/lophine/config/modules/<category>/`，使用 `@ConfigClassInfo` + `@ConfigInfo` 注解，并实现 `IConfigModule`。
-- 模块通过 `ClassLoadUtil` 按包名自动扫描注册（`ConfigManager.registerConfig("lophine", ...)`），无需手动登记。
-- **注意**：Tumble 的 `@ConfigInfo` 注解**不支持** `comments` 属性（上游 Lophine 新版支持，但 Tumble 基于旧版）。配置注释需写入语言文件。
-- 语言文件位于 `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`，键格式为 `lophine.<category>.<module_name>.<config_name>.comment`（category 使用 `EnumConfigCategory` 的 `baseKeyName`，如 `function`、`fixes`）。
-- 语言文件键按字母序排列，插入新键时保持排序；若存在 `sortLangKeys` 任务则运行之（当前工程未注册该任务，手动保持排序即可）。
+- 配置类位于 `lophine-server/src/main/java/org/tumblemc/tumble/config/modules/<category>/`（Tumble 自有）或 `fun/bm/lophine/config/modules/<category>/`（Lophine 上游），使用 `@ConfigClassInfo` + `@ConfigInfo` 即可，**不存在** `IConfigModule` 之类的接口要实现。
+- 配置类字段必须是 `static` 且非 `final`（`WorldValue` 字段除外）；配置类本身只被反射实例化来承载 `@NeedRun` 回调，实例字段不会被读取。
+- 模块通过 `ClassLoadUtil` 按包名自动扫描注册（`ConfigManager.initConfigs()` 里的 `luminol` / `lophine` / `tumble` 三个包），无需手动登记。
+- **注意**：Tumble 的 `@ConfigInfo` 注解**不支持** `comments` 属性（上游 Lophine 新版支持，但 Tumble 基于旧版）。配置注释写入语言文件；没有 comment 键的配置不会出现在 TOML 中。
+- 语言文件位于 `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`。Tumble 模块的键格式为 `tumble.<category>.<module_name>[.<directory...>].<config_name>.comment`，类注释键为 `tumble.<category>.<module_name>.comment`（category 使用 `EnumConfigCategory` 的 `baseKeyName`，如 `function`、`optimizations`）；`@ConfigInfo(directory = {...})` 的每一段都要写进键里。
+- 语言文件的键按整串字母序排列；插入新键时放到对应位置，不要整体重排文件（避免无关 diff）。
+- **重启才生效的配置**（结构生成规则、模板缓存等启动期状态）：给每个字段加 `@DoNotLoad(when = EnumLoadType.RELOAD)`，并在 `@NeedRun(when = EnumRunnableType.ON_LOADED)` 方法里做一次性初始化。这样 reload 不会覆盖内存字段，游戏内改值只写文件并返回 `SAVED_FOR_RESTART`。
 - 修改语言文件后提交到 `lophine-server` 工作仓库，并随配置一并重建 `rebuildLophineServerPatches`。
 
 ## 外部移植功能登记（强制）
@@ -105,6 +107,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 5. **注入点清单**：每个被修改的 MC 文件 + 方法/字段 + 当前行号（行号会漂移，以方法名与锚点文本为准）。
 6. **配置与 lang 键前缀**。
 7. **更新核对清单**：上游更新后要 diff 哪些文件、重点检查哪些锚点。
+8. **上游原样与 Tumble 改动的界限**：每个条目必须有一张「上游原样 vs Tumble 改动」表，逐项标注上游原样移植的部分与 Tumble 独有部分（新增开关、新增类、Luminol 配置适配、改写的初始化逻辑、只改注释的注入 hunk）。Tumble 独有的代码要带 `// Tumble` 或 `// Tumble start - ... // Tumble end` 标记；Tumble 独有类放在 `org.tumblemc.tumble.*`。上游更新时只 diff「上游原样」部分，Tumble 独有部分单独回归，不要因为上游没有对应物而误删。
 
 ### DeerFolia：AFK Network Optimization（AFK 网络优化）
 
@@ -122,9 +125,9 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 
 | 文件 | 行数 | 作用 |
 |---|---|---|
-| `DeerFolia-server/src/main/java/cn/lunadeer/mc/deerfolia/afknetwork/AfkNetworkManager.java` | 851 | 状态机、抑制分类、脏状态、重同步、统计 |
-| `.../afknetwork/AfkSuppressibleCategory.java` | 32 | 5 个抑制类别枚举 |
-| `.../afknetwork/AfkNetworkStatsCommand.java` | 33 | `/afknetstats` |
+| `DeerFolia-server/src/main/java/cn/lunadeer/mc/deerfolia/afknetwork/AfkNetworkManager.java` | 954 | 状态机、抑制分类、脏状态、重同步、统计 |
+| `.../afknetwork/AfkSuppressibleCategory.java` | 39 | 5 个抑制类别枚举 |
+| `.../afknetwork/AfkNetworkStatsCommand.java` | 38 | `/afknetstats` |
 | `.../deerfolia/DeerFoliaConfiguration.java` 122-175 | — | `AfkNetworkOptimization` 配置 + `@PostProcess` 归一化 |
 
 **Tumble 落点**
@@ -134,11 +137,23 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | minecraft 补丁 | `tumble-server/minecraft-patches/features/0003-DeerFolia-AFK-network-optimization.patch` |
 | lophine 补丁（代码） | `tumble-server/lophine-patches/features/0006-DeerFolia-AFK-network-optimization.patch` |
 | lophine 补丁（配置 + lang） | `tumble-server/lophine-patches/features/0007-Add-Config-of-DeerFolia-AFK-network-optimization.patch` |
-| 代码 | `lophine-server/src/main/java/cn/lunadeer/mc/deerfolia/afknetwork/`：`AfkNetworkManager.java`(854)、`AfkSuppressibleCategory.java`(32)、`AfkNetworkStatsCommand.java`(33) |
+| 代码 | `lophine-server/src/main/java/cn/lunadeer/mc/deerfolia/afknetwork/`：`AfkNetworkManager.java`(958)、`AfkSuppressibleCategory.java`(39)、`AfkNetworkStatsCommand.java`(38) |
 | 配置 | `lophine-server/src/main/java/org/tumblemc/tumble/config/modules/optimizations/AfkNetworkConfig.java` |
 | lang | `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`，前缀 `tumble.optimizations.afk_network.*` |
 
-> 移植时代码包名保留 `cn.lunadeer.mc.deerfolia.afknetwork`，目的是与上游逐行 diff；改名需同步 Manager 内 13 处引用与 MC 注入点里的 12 处全限定调用。
+> 移植时代码包名保留 `cn.lunadeer.mc.deerfolia.afknetwork`，目的是与上游逐行 diff；改名需同步 Manager 内 11 处 `AfkNetworkConfig` 读取与 MC 注入点里的 16 处全限定调用。
+
+**上游原样 vs Tumble 改动**
+
+| 部分 | 归属 | 说明 |
+|---|---|---|
+| `AfkNetworkManager` 状态机、抑制分类、脏状态、重同步、统计主体 | 上游原样 | 与上游的差异仅在配置读取与消息开关，见下行 |
+| `AfkSuppressibleCategory`、`AfkNetworkStatsCommand` | 上游原样 | 与上游逐行一致（diff 0 行） |
+| MC 12 个文件的注入 hunk | 上游原样 | 逻辑同上游 `0012`，仅行尾追加 `// Tumble` 注释 |
+| 配置读取改 `AfkNetworkConfig.*` | **Tumble 独有** | `AfkNetworkManager` 内 11 处，均带 `//Tumble config.`；替换上游 `DeerFoliaConfiguration.afkNetworkOptimization`，另有 3 行上游调用保留为注释（仅作 diff 参照） |
+| `afk_message_enabled` 开关 | **Tumble 独有** | 上游只有「空消息 = 关闭」语义；Tumble 增加独立开关同时控制进入/退出消息 |
+| 默认进出消息文案 | **Tumble 独有** | 由 `DeerFolia` 改为 `Tumble`（`AfkNetworkConfig` 默认值 + lang 注释） |
+| `AfkNetworkConfig` + `@NeedRun(ON_LOADED)` 归一化 | **Tumble 独有** | 替代上游 `@PostProcess normalizeAfkNetworkOptimization()`；白名单未知类别在 `refreshConfiguration()` 中静默忽略（上游会 warn），消息与阈值钳制保持一致 |
 
 **注入点**（`tumble-server/src/minecraft/java/` 下，行号为 2026-11-07 状态）
 
@@ -171,7 +186,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
    - `ServerPlayer.tick()` 顶部是否新增早退（hook 必须在早退之后）
    - `ServerGamePacketListenerImpl` 输入/移动/聊天方法里的 Carpet 代码段
    - `Connection.send` 内 Paper 队列段
-3. `deerFolia$*` accessor 签名变化时，同步修改 `AfkNetworkManager` 中 13 处调用。
+3. `deerFolia$*` accessor 签名变化时，同步修改 `AfkNetworkManager` 中 11 处 `AfkNetworkConfig` 读取与 16 处 MC 侧全限定调用；Tumble 独有部分（`afk_message_enabled`、消息文案、配置模块）随配置一并回归。
 4. 回归：编译通过 + 挂机阈值触发进入/退出消息 + `/afknetstats` 有数据 + 恢复活动后区块/实体无幽灵。
 
 ### DeerFoliaPlus：Bedrock-style Stronghold Generation（基岩版风格要塞生成）
@@ -196,6 +211,17 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | true | false | 全部随机（替换原版 strongholds 放置） |
 | true | true | 环内原版 128 + 环外随机（混合模式） |
 
+**上游原样 vs Tumble 改动**
+
+| 部分 | 归属 | 说明 |
+|---|---|---|
+| DeerFoliaPlus `0004-Bedrock-style-stronghold-generation.patch`（只改 `ChunkGeneratorStructureState.injectSpigot`） | 上游原样 | `enabled` 时把原版 strongholds 替换成 `RandomSpreadStructurePlacement(spacing, separation, LINEAR, 10387319)`，即纯全随机 |
+| 上游配置 `BedrockStrongholdGeneration`（`enabled`/`spacing`/`separation`，默认 false/48/12） | 上游原样 | 见来源表 57-67 行 |
+| `keep_vanilla_rings` 开关 + 混合模式分支 | **Tumble 独有** | 上游没有「环内保留、环外随机」能力；Tumble 在 minecraft `0005` 里加 `enabled && keep_vanilla_rings` 时保留原版环集合（`newHolder = structureSet`） |
+| `org.tumblemc.tumble.worldgen.BedrockOuterStrongholdPlacement`（101 行） | **Tumble 独有** | `RandomSpreadStructurePlacement` 子类，`isPlacementChunk`/`applyAdditionalChunkRestrictions` 排除原版环区（R=1535 chunks） |
+| `BedrockStrongholdConfig` + lang + `@DoNotLoad(RELOAD)` | **Tumble 独有** | Luminol 配置模块替代上游 YAML；4 键；启动期读取，改后重启生效 |
+| 补丁拆分 | **Tumble 独有** | 上游 1 个补丁；Tumble 拆成 minecraft `0004`（全随机）/ `0005`（混合）+ lophine `0008`（placement 类）/ `0009`（配置 + lang） |
+
 **Tumble 落点**
 
 | 类型 | 路径 |
@@ -212,8 +238,8 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 
 | 文件 | 方法 / 锚点 | 行 | 注入内容 |
 |---|---|---|---|
-| `net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java` | `injectSpigot`：strongholds 判断分支 | 83-106 | `enabled && !keep_vanilla_rings` 时替换为 RandomSpread（salt `10387319`） |
-| 同上 | `injectSpigot`：stream 收集之后 | 140-164 | `enabled && keep_vanilla_rings` 时追加 `Holder.direct(BedrockOuterStrongholdPlacement)`；返回 `List.copyOf` |
+| `net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java` | `injectSpigot`：strongholds 判断分支（Tumble start 在 84 行，上游 DeerFoliaPlus 块在 88-109 行） | 84-109 | `enabled && !keep_vanilla_rings` 时替换为 RandomSpread（salt `10387319`）；`keep_vanilla_rings` 时保留 registry holder |
+| 同上 | `injectSpigot`：stream 收集之后 | 145-164 | `enabled && keep_vanilla_rings` 时追加 `Holder.direct(BedrockOuterStrongholdPlacement)`；返回 `List.copyOf` |
 
 **自定义 placement 依赖（上游更新时需要核对的内部 API）**
 
@@ -241,6 +267,93 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
    - 环边界无重叠、环内随机数为 0;
    - Spigot `stronghold-seed` 仍只影响环;Lophine Secure Seed 下随机分布走 crypto random;
    - datapack 把 strongholds 改成非 `concentric_rings` 时混合模式不追加外层集合。
+6. Tumble 独有部分（`0005`、`0008`、`0009`、`BedrockOuterStrongholdPlacement`、`keep_vanilla_rings`）在上游没有对应物，上游更新后必须单独回归：全随机 / 混合 / 纯原版三种组合 + `/locate` 环边界。
+
+### DeerFoliaPlus：Vanilla Structure Generation Fixes（原版结构生成修复）
+
+**来源**
+
+| 项 | 值 |
+|---|---|
+| 仓库 | https://github.com/LunaDeerMC/DeerFoliaPlus |
+| 分支 | `ver/26.3.x` |
+| 移植时 commit | `0cf3b7b`（2026-11-07） |
+| 设计文档 | `docs/structure-generation-fixes.md`（207 行，含问题编号与模板对照） |
+| 功能说明 | `README.md` 第 13 行、配置表 79-88 行 |
+| 上游补丁 | `DeerFoliaPlus-server/minecraft-patches/features/0009-Configurable-vanilla-structure-generation-repairs.patch`（4 个 MC 文件，5 个 hunk） |
+| 上游配置（YAML） | `DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/configurations/StructureGenerationFixesConfiguration.java`（254 行，含 `validate()` 预校验） |
+| 上游装配 | 同目录 `DeerFoliaPlusConfiguration.java` 19-25 行（`validate` + `initialize`）、31 行字段 |
+| 上游测试 | `DeerFoliaPlus-server/src/test/java/cn/lunadeer/mc/deerfoliaplus/worldgen/` 8 个测试类 + `upgrade/StrongholdPlacementUpgradeTest.java` |
+
+**行为**
+
+- 总开关 `enabled`（默认 true）+ 44 个独立修复开关；关闭总开关时全部修复不生效。
+- 修复在结构模板加载时重写 NBT（`StructureGenerationFixes.openTemplate`），只对原版 `minecraft:core` 包、且与内置基线哈希一致的模板/资源生效；datapack 覆盖模板、或模板/依赖资源被改动时原样返回。
+- 启动时快照一次开关；模板被 MC 缓存，因此**必须重启生效**，只影响之后生成的区块，不改写已有世界。
+
+**上游源码（7 个类 + 基线）**
+
+| 文件（`DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen/`） | 上游行数 | Tumble 行数 | 作用 |
+|---|---|---|---|
+| `StructureGenerationFixes.java` | 266 | 259 | 开关快照、模板/资源基线守卫、Catalog 载入 |
+| `StructureRepair.java` | 49 | 49 | 44 个修复枚举 |
+| `StructureTemplateRepairs.java` | 211 | 211 | 结构模板 NBT 修复主体 |
+| `TreeStructureRepairs.java` | 283 | 283 | 营地/帐篷树木修复 |
+| `VillagePileRepairs.java` | 70 | 70 | 浅层世界堆放装饰 |
+| `VillageStructureRepairs.java` | 136 | 136 | 村庄地基/道路连接空间 |
+| `AncientCityCampRepairs.java` | 70 | 70 | 远古城市营地变体 |
+| `src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json` | 1875 | 1875 | 原版模板/资源哈希基线（两端口 sha256 一致） |
+| `configurations/StructureGenerationFixesConfiguration.java` | 254 | 未移植（改为 Luminol 配置模块） | YAML 配置 + 预校验 |
+
+**Tumble 落点**
+
+| 类型 | 路径 |
+|---|---|
+| minecraft 补丁 | `tumble-server/minecraft-patches/features/0006-Add-DeerFolia-Configurable-vanilla-structure-generat.patch` |
+| lophine 补丁（代码 + 基线） | `tumble-server/lophine-patches/features/0010-Add-DeerFolia-Configurable-vanilla-structure-generat.patch` |
+| lophine 补丁（配置 + lang） | `tumble-server/lophine-patches/features/0011-Add-DeerFolia-vanilla-structure-generation-fixes-Con.patch` |
+| 代码 | `lophine-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen/`（7 个文件） |
+| 基线资源 | `lophine-server/src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json`（sha256 `580921b3…`） |
+| 配置类 | `lophine-server/src/main/java/org/tumblemc/tumble/config/modules/function/StructureGenerationFixesConfig.java`（209 行） |
+| lang | `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`，前缀 `tumble.function.structure_generation_fixes.*`（46 键 = 类注释 + `enabled` + 44 分项） |
+
+**上游原样 vs Tumble 改动**
+
+| 部分 | 归属 | 说明 |
+|---|---|---|
+| 6 个 worldgen 类（除 `StructureGenerationFixes`） | 上游原样 | 与上游逐行一致（diff 0 行） |
+| `StructureGenerationFixes` 的 `openTemplate`、Catalog、基线校验 | 上游原样 | 逻辑未改 |
+| 基线 JSON | 上游原样 | 内容与上游 sha256 一致 |
+| MC 4 个文件的 5 个注入 hunk | 上游原样 + 注释 | 与上游 `0009` 的 hunk 一一对应，仅行尾追加 `// Tumble` |
+| `initialize()` / `snapshot()` 改读静态配置字段 | **Tumble 独有** | 上游从 YAML 配置对象读；Tumble 直接读 `StructureGenerationFixesConfig`，标记 `// Tumble start/end` |
+| `StructureGenerationFixesConfig` 配置模块 | **Tumble 独有** | Luminol `@ConfigInfo(directory = {...})` 子表；45 键（`enabled` + 44 分项）；全部 `@DoNotLoad(RELOAD)`；`@NeedRun(ON_LOADED)` 调 `initialize()` |
+| 启动装配位置 | **Tumble 独有** | `ConfigManager.loadConfigFiles()`（`DedicatedServer` 242 行，`initServer` 内、世界生成前）代替上游 `DeerFoliaPlusConfiguration.load()` |
+| 删除的上游逻辑 | **Tumble 独有** | YAML `validate()`（Luminol TOML 自带类型校验 + `allowAutoReset`）、`initialized` 标志与 reload 变化告警（`DoNotLoad` 已保证 reload 不写字段） |
+| 上游测试（worldgen 8 个 + upgrade 1 个） | 未移植 | Tumble 无 `lophine-server/src/test`，只移植生产代码 |
+
+**注入点**（`tumble-server/src/minecraft/java/`，行号为 2026-11-07 状态）
+
+| 文件 | 方法 / 锚点 | 行 | 注入内容 |
+|---|---|---|---|
+| `net/minecraft/world/level/levelgen/feature/BlockPileFeature.java` | `place()`：`origin.getY() < level.getMinY() + ...` | 29 | `VillagePileRepairs.minimumClearance(this)` |
+| `net/minecraft/world/level/levelgen/structure/pools/FeaturePoolElement.java` | `place(..., StructureTemplateManager, ...)` 的 `return` | 82 | `VillagePileRepairs.place(...)`，改用 `resourceManagerSource.deerFoliaPlusResourceManager()` |
+| `net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java` | `tryPlacingChildren`：`targetElement` 选择 | 378 | `AncientCityCampRepairs.select(...)` |
+| 同上 | 地基/上下文形状判定 | 450-463 | `VillageStructureRepairs.candidateSpace(...)` + `contextFree` 回填 |
+| `net/minecraft/world/level/levelgen/structure/templatesystem/loader/ResourceManagerTemplateSource.java` | `load(Identifier)` | 32-36 / 41 | 新增 `deerFoliaPlusResourceManager()`；`load` 改走 `StructureGenerationFixes.openTemplate(...)` |
+
+**配置键**（`tumble_config/tumble_global_config.toml`，段 `[function.structure_generation_fixes]`）
+
+`enabled` + 6 组 44 个开关：`villages.*`（15）、`trail_ruins.*`（6）、`trial_chambers.*`（3）、`bastions.*`（1）、`ancient_cities.*`（4）、`abandoned_camps.campsite_pale_garden2`（1）、`abandoned_camps.trees.*`（14）。全部 `@DoNotLoad(RELOAD)`，改后重启生效。
+
+**更新核对清单**
+
+1. 上游改动检查：
+   `git -C DeerFoliaPlus log --oneline -- DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen DeerFoliaPlus-server/src/main/resources/deerfoliaplus DeerFoliaPlus-server/minecraft-patches/features/0009-Configurable-vanilla-structure-generation-repairs.patch`
+2. 逐文件 diff 7 个 worldgen 类：只有 `StructureGenerationFixes.java` 允许有 Tumble 差异（import、`initialize`/`snapshot`、`// Tumble` 标记），其余必须 0 行差异，否则按上游合入。
+3. 对比上游 `0009` 与 Tumble `0006` 的 hunk，重点锚点：`BlockPileFeature.place`、`FeaturePoolElement.place`、`JigsawPlacement` 的 `candidateFree`/`contextFree`、`ResourceManagerTemplateSource.load`；上游方法签名（`StructureTemplateManager`、`resourceManagerSource`、`VoxelShape`/`Shapes.joinIsNotEmpty`）变化会直接在编译期报错。
+4. 基线资源：与上游 sha256 必须一致；MC 数据版本升级或 vanilla 模板变动后要按上游 `StructureGenerationFixture`/`VanillaRepairResources` 重新生成，否则修复会静默不生效。
+5. 依赖的 `net.minecraft` API：`NbtIo.readCompressed`/`writeCompressed`、`NbtAccounter.create`、`Resource#sourcePackId`/`knownPackInfo`、`Identifier.parse`；任一变更需同步 `StructureGenerationFixes`。
+6. 回归：总开关关闭时原版模板不变；单项关闭时对应结构保持原版；全开时新建世界结构生成无报错；datapack 覆盖模板时回退原版；改配置后必须重启才生效。
 
 ## 常用命令速查
 

@@ -1,0 +1,335 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 7 Nov 2026 21:03:16 +0800
+Subject: [PATCH] Add DeerFolia vanilla structure generation fixes Config
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/function/StructureGenerationFixesConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/function/StructureGenerationFixesConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..925d674e8e904b4cc7a99c354d5c79fbaa5f1a42
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/function/StructureGenerationFixesConfig.java
+@@ -0,0 +1,209 @@
++package org.tumblemc.tumble.config.modules.function;
++
++import cn.lunadeer.mc.deerfoliaplus.worldgen.StructureGenerationFixes;
++import me.earthme.luminol.api.config.annotation.ConfigClassInfo;
++import me.earthme.luminol.api.config.annotation.ConfigInfo;
++import me.earthme.luminol.api.config.annotation.DoNotLoad;
++import me.earthme.luminol.api.config.annotation.NeedRun;
++import me.earthme.luminol.api.config.enums.EnumConfigCategory;
++import me.earthme.luminol.api.config.enums.EnumLoadType;
++import me.earthme.luminol.api.config.enums.EnumRunnableType;
++
++/**
++ * Vanilla structure generation repairs ported from DeerFoliaPlus.
++ * Structure templates are cached by Minecraft, so every switch is restart-only.
++ */
++@ConfigClassInfo(category = EnumConfigCategory.FUNCTION, name = "structure_generation_fixes")
++public class StructureGenerationFixesConfig {
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "enabled")
++    public static boolean enabled = false;
++
++    // villages
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "snowy_shepherds_house1", directory = {"villages"})
++    public static boolean snowy_shepherds_house1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "plains_small_house8", directory = {"villages"})
++    public static boolean plains_small_house8 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "plains_fisher_cottage1", directory = {"villages"})
++    public static boolean plains_fisher_cottage1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "desert_tannery1", directory = {"villages"})
++    public static boolean desert_tannery1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "desert_large_farm1", directory = {"villages"})
++    public static boolean desert_large_farm1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "savanna_fisher_cottage1", directory = {"villages"})
++    public static boolean savanna_fisher_cottage1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "savanna_shepherd1", directory = {"villages"})
++    public static boolean savanna_shepherd1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "savanna_animal_pen2", directory = {"villages"})
++    public static boolean savanna_animal_pen2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "savanna_large_farm2", directory = {"villages"})
++    public static boolean savanna_large_farm2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "savanna_small_farm", directory = {"villages"})
++    public static boolean savanna_small_farm = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "hay_pile", directory = {"villages"})
++    public static boolean hay_pile = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "pumpkin_pile", directory = {"villages"})
++    public static boolean pumpkin_pile = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "ice_pile", directory = {"villages"})
++    public static boolean ice_pile = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "melon_pile", directory = {"villages"})
++    public static boolean melon_pile = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "snow_pile", directory = {"villages"})
++    public static boolean snow_pile = true;
++
++    // trail_ruins
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "group_upper1", directory = {"trail_ruins"})
++    public static boolean group_upper1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "group_upper2", directory = {"trail_ruins"})
++    public static boolean group_upper2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "group_upper3", directory = {"trail_ruins"})
++    public static boolean group_upper3 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "group_upper4", directory = {"trail_ruins"})
++    public static boolean group_upper4 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "group_upper5", directory = {"trail_ruins"})
++    public static boolean group_upper5 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "road_end1", directory = {"trail_ruins"})
++    public static boolean road_end1 = true;
++
++    // trial_chambers
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "corridor_wall", directory = {"trial_chambers"})
++    public static boolean corridor_wall = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "walkway_with_bridge1", directory = {"trial_chambers"})
++    public static boolean walkway_with_bridge1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "chamber_disposal8", directory = {"trial_chambers"})
++    public static boolean chamber_disposal8 = true;
++
++    // bastions
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "pathway_end_wall0", directory = {"bastions"})
++    public static boolean pathway_end_wall0 = true;
++
++    // ancient_cities
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "intact_horizontal_wall_bridge", directory = {"ancient_cities"})
++    public static boolean intact_horizontal_wall_bridge = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "camp1", directory = {"ancient_cities"})
++    public static boolean camp1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "camp2", directory = {"ancient_cities"})
++    public static boolean camp2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "camp3", directory = {"ancient_cities"})
++    public static boolean camp3 = true;
++
++    // abandoned_camps
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "campsite_pale_garden2", directory = {"abandoned_camps"})
++    public static boolean campsite_pale_garden2 = true;
++
++    // abandoned_camps/trees
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "campsite_old_growth_pine_taiga1", directory = {"abandoned_camps", "trees"})
++    public static boolean campsite_old_growth_pine_taiga1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "campsite_old_growth_spruce_taiga4", directory = {"abandoned_camps", "trees"})
++    public static boolean campsite_old_growth_spruce_taiga4 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "campsite_snowy_taiga3", directory = {"abandoned_camps", "trees"})
++    public static boolean campsite_snowy_taiga3 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_cherry_grove1", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_cherry_grove1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_dappled_forest1", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_dappled_forest1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_dappled_forest2", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_dappled_forest2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_dappled_forest3", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_dappled_forest3 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_dappled_forest4", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_dappled_forest4 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_dappled_forest6", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_dappled_forest6 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_savanna1", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_savanna1 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_snowy_taiga10", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_snowy_taiga10 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_taiga2", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_taiga2 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_taiga7", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_taiga7 = true;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "tent_windswept_forest6", directory = {"abandoned_camps", "trees"})
++    public static boolean tent_windswept_forest6 = true;
++
++    @NeedRun(when = EnumRunnableType.ON_LOADED)
++    public void onLoaded() {
++        StructureGenerationFixes.initialize();
++    }
++}
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index e6515daadf5705fb005b5bb79f08924e34827421..79f2652dc62e39198c3224f22e0713702729216c 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -1592,6 +1592,52 @@
+   "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "Keep the vanilla 128 ring-based strongholds inside the ring zone and randomize only strongholds outside it. When off, every stronghold uses the random distribution.",
+   "tumble.function.bedrock_stronghold.separation.comment": "Minimum distance between random strongholds in chunks. Must be less than spacing.",
+   "tumble.function.bedrock_stronghold.spacing.comment": "Average distance between random strongholds in chunks. 48 means roughly one stronghold per 48x48 chunks.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.campsite_pale_garden2.comment": "MC-312909: restore the campsite_pale_garden_2 connection to its tent.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_old_growth_pine_taiga1.comment": "MC-312912: restore the giant tree in campsite_old_growth_pine_taiga_1.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_old_growth_spruce_taiga4.comment": "MC-312912: restore the giant tree in campsite_old_growth_spruce_taiga_4.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_snowy_taiga3.comment": "MC-312912: restore the giant tree in campsite_snowy_taiga_3.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_cherry_grove1.comment": "MC-312913: restore the tree in tent_cherry_grove_1.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest1.comment": "MC-312913: restore the tree in tent_dappled_forest_1.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest2.comment": "MC-312913: restore the tree in tent_dappled_forest_2.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest3.comment": "MC-312913: restore the tree in tent_dappled_forest_3.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest4.comment": "MC-312913: restore the tree in tent_dappled_forest_4.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest6.comment": "MC-312913: restore the tree in tent_dappled_forest_6.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_savanna1.comment": "MC-312913: restore the tree in tent_savanna_1.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_snowy_taiga10.comment": "MC-312913: restore the tree in tent_snowy_taiga_10.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_taiga2.comment": "MC-312913: restore the tree in tent_taiga_2.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_taiga7.comment": "MC-312913: restore the tree in tent_taiga_7.",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_windswept_forest6.comment": "MC-312913: restore the tree in tent_windswept_forest_6.",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp1.comment": "MC-255639: allow camp_1 to replace the original overlaid camp when variant 1 is selected.",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp2.comment": "MC-255639: allow camp_2 to replace the original overlaid camp when variant 2 is selected.",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp3.comment": "MC-255639: allow camp_3 to replace the original overlaid camp when variant 3 is selected.",
++  "tumble.function.structure_generation_fixes.ancient_cities.intact_horizontal_wall_bridge.comment": "MC-262023: restore the east wall connection of intact_horizontal_wall_bridge.",
++  "tumble.function.structure_generation_fixes.bastions.pathway_end_wall0.comment": "MC-312914: restore the terminal wall unit of units/pathways/pathway_wall_0.",
++  "tumble.function.structure_generation_fixes.comment": "Vanilla structure generation repairs ported from DeerFoliaPlus. All switches are read once at startup; restart the server after changing them.",
++  "tumble.function.structure_generation_fixes.enabled.comment": "Master switch for the vanilla structure generation repairs. When off, every individual switch is ignored.",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper1.comment": "MC-264093: restore the group_upper_1 building connection.",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper2.comment": "MC-264093: restore the group_upper_2 building connection.",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper3.comment": "MC-264093: restore the group_upper_3 building connection.",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper4.comment": "MC-264093: restore the group_upper_4 building connection.",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper5.comment": "MC-264093: restore the group_upper_5 building connection.",
++  "tumble.function.structure_generation_fixes.trail_ruins.road_end1.comment": "Restore the road_end_1 connection to the unoccupied end of the road.",
++  "tumble.function.structure_generation_fixes.trial_chambers.chamber_disposal8.comment": "MC-312911: restore the hopper and barrel on the upper floor of chamber_8.",
++  "tumble.function.structure_generation_fixes.trial_chambers.corridor_wall.comment": "MC-266778: restore the corridor/addon/wall attachment.",
++  "tumble.function.structure_generation_fixes.trial_chambers.walkway_with_bridge1.comment": "MC-266778: restore the chamber/addon/walkway_with_bridge_1 attachment.",
++  "tumble.function.structure_generation_fixes.villages.desert_large_farm1.comment": "MC-310673: repair desert_large_farm1 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.desert_tannery1.comment": "MC-310673: repair desert_tannery1 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.hay_pile.comment": "MC-309531: allow village hay piles to place at the bottom of shallow worlds.",
++  "tumble.function.structure_generation_fixes.villages.ice_pile.comment": "MC-309531: allow village ice piles to place at the bottom of shallow worlds.",
++  "tumble.function.structure_generation_fixes.villages.melon_pile.comment": "Allow vanilla village melon piles affected by the same shallow-world height check.",
++  "tumble.function.structure_generation_fixes.villages.plains_fisher_cottage1.comment": "MC-309529: repair plains_fisher_cottage1 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.plains_small_house8.comment": "MC-309529: repair plains_small_house8 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.pumpkin_pile.comment": "MC-309531: allow village pumpkin piles to place at the bottom of shallow worlds.",
++  "tumble.function.structure_generation_fixes.villages.savanna_animal_pen2.comment": "MC-306596: repair savanna_animal_pen2 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.savanna_fisher_cottage1.comment": "MC-306596: repair savanna_fisher_cottage1 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.savanna_large_farm2.comment": "MC-306596: repair savanna_large_farm2 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.savanna_shepherd1.comment": "MC-306596: repair savanna_shepherd1 placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596: repair savanna_small_farm placement below an internal terrain-matching road connector.",
++  "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "Allow vanilla village snow piles affected by the same shallow-world height check.",
++  "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550: repair the snowy_shepherds_house_1 entrance in normal and zombie villages.",
+   "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index f0cd4b61321c73efd0306d6ff88e17a738dff21c..e3debe8b5163de10bbb250740e4ea1a208c92282 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -1592,6 +1592,52 @@
+   "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "环区以内保留原版 128 个环状要塞,仅在环外使用随机分布;关闭时全部要塞使用随机分布。",
+   "tumble.function.bedrock_stronghold.separation.comment": "随机要塞之间的最小距离(区块),必须小于 spacing。",
+   "tumble.function.bedrock_stronghold.spacing.comment": "随机要塞之间的平均距离(区块)。48 表示大约每 48×48 区块一个要塞。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.campsite_pale_garden2.comment": "MC-312909:修复 campsite_pale_garden_2 与其帐篷的连接。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_old_growth_pine_taiga1.comment": "MC-312912:恢复 campsite_old_growth_pine_taiga_1 中的巨树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_old_growth_spruce_taiga4.comment": "MC-312912:恢复 campsite_old_growth_spruce_taiga_4 中的巨树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.campsite_snowy_taiga3.comment": "MC-312912:恢复 campsite_snowy_taiga_3 中的巨树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_cherry_grove1.comment": "MC-312913:恢复 tent_cherry_grove_1 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest1.comment": "MC-312913:恢复 tent_dappled_forest_1 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest2.comment": "MC-312913:恢复 tent_dappled_forest_2 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest3.comment": "MC-312913:恢复 tent_dappled_forest_3 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest4.comment": "MC-312913:恢复 tent_dappled_forest_4 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_dappled_forest6.comment": "MC-312913:恢复 tent_dappled_forest_6 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_savanna1.comment": "MC-312913:恢复 tent_savanna_1 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_snowy_taiga10.comment": "MC-312913:恢复 tent_snowy_taiga_10 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_taiga2.comment": "MC-312913:恢复 tent_taiga_2 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_taiga7.comment": "MC-312913:恢复 tent_taiga_7 中的树。",
++  "tumble.function.structure_generation_fixes.abandoned_camps.trees.tent_windswept_forest6.comment": "MC-312913:恢复 tent_windswept_forest_6 中的树。",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp1.comment": "MC-255639:选中变体 1 时允许 camp_1 替换原有的叠加营地。",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp2.comment": "MC-255639:选中变体 2 时允许 camp_2 替换原有的叠加营地。",
++  "tumble.function.structure_generation_fixes.ancient_cities.camp3.comment": "MC-255639:选中变体 3 时允许 camp_3 替换原有的叠加营地。",
++  "tumble.function.structure_generation_fixes.ancient_cities.intact_horizontal_wall_bridge.comment": "MC-262023:恢复 intact_horizontal_wall_bridge 的东墙连接。",
++  "tumble.function.structure_generation_fixes.bastions.pathway_end_wall0.comment": "MC-312914:恢复 units/pathways/pathway_wall_0 的末端墙体单元。",
++  "tumble.function.structure_generation_fixes.comment": "从 DeerFoliaPlus 移植的原版结构生成修复。所有开关只在启动时读取,修改后需重启服务器。",
++  "tumble.function.structure_generation_fixes.enabled.comment": "原版结构生成修复总开关。关闭后所有单项开关都被忽略。",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper1.comment": "MC-264093:恢复 group_upper_1 的建筑连接。",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper2.comment": "MC-264093:恢复 group_upper_2 的建筑连接。",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper3.comment": "MC-264093:恢复 group_upper_3 的建筑连接。",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper4.comment": "MC-264093:恢复 group_upper_4 的建筑连接。",
++  "tumble.function.structure_generation_fixes.trail_ruins.group_upper5.comment": "MC-264093:恢复 group_upper_5 的建筑连接。",
++  "tumble.function.structure_generation_fixes.trail_ruins.road_end1.comment": "恢复 road_end_1 与道路未占用一端的连接。",
++  "tumble.function.structure_generation_fixes.trial_chambers.chamber_disposal8.comment": "MC-312911:恢复 chamber_8 上层的漏斗与木桶。",
++  "tumble.function.structure_generation_fixes.trial_chambers.corridor_wall.comment": "MC-266778:恢复 corridor/addon/wall 的拼接。",
++  "tumble.function.structure_generation_fixes.trial_chambers.walkway_with_bridge1.comment": "MC-266778:恢复 chamber/addon/walkway_with_bridge_1 的拼接。",
++  "tumble.function.structure_generation_fixes.villages.desert_large_farm1.comment": "MC-310673:修复 desert_large_farm1 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.desert_tannery1.comment": "MC-310673:修复 desert_tannery1 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.hay_pile.comment": "MC-309531:允许村庄干草堆在浅层世界的底部放置。",
++  "tumble.function.structure_generation_fixes.villages.ice_pile.comment": "MC-309531:允许村庄冰块堆在浅层世界的底部放置。",
++  "tumble.function.structure_generation_fixes.villages.melon_pile.comment": "允许受同一浅层世界高度检查影响的原版村庄西瓜堆放置。",
++  "tumble.function.structure_generation_fixes.villages.plains_fisher_cottage1.comment": "MC-309529:修复 plains_fisher_cottage1 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.plains_small_house8.comment": "MC-309529:修复 plains_small_house8 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.pumpkin_pile.comment": "MC-309531:允许村庄南瓜堆在浅层世界的底部放置。",
++  "tumble.function.structure_generation_fixes.villages.savanna_animal_pen2.comment": "MC-306596:修复 savanna_animal_pen2 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.savanna_fisher_cottage1.comment": "MC-306596:修复 savanna_fisher_cottage1 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.savanna_large_farm2.comment": "MC-306596:修复 savanna_large_farm2 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.savanna_shepherd1.comment": "MC-306596:修复 savanna_shepherd1 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596:修复 savanna_small_farm 被内部地形匹配道路连接件盖住的问题。",
++  "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "允许受同一浅层世界高度检查影响的原版村庄雪堆放置。",
++  "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550:修复普通与僵尸村庄中 snowy_shepherds_house_1 的入口。",
+   "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "玩家进入挂机状态时发送一次。占位符:{player}。留空则关闭。支持 & 与 &#RRGGBB 颜色代码。",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "玩家恢复活动时发送。占位符:{player}、{saved_traffic}、{saved_bandwidth}。留空则关闭。",
