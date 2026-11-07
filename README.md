@@ -6,8 +6,14 @@ It uses the Paper/Comfreyweight patch workflow and currently targets Minecraft 2
 ## Features
 - Purpur Anvil Setting.
 - Configuration to bypass anvil "Too Expensive!" limit.
+- AFK network optimization, ported from [DeerFolia](https://github.com/LunaDeerMC/DeerFolia):
+  suppresses non-essential clientbound packets for AFK players and resynchronizes chunks and
+  entities when they become active again. Statistics: `/afknetstats` (admin).
 
 LargeBarrel is provided by upstream Lophine (large_barrel carpet rule) and is no longer carried as a Tumble patch.
+
+Features ported from other forks, with their upstream patches, sources and injection points, are
+tracked in the ported-feature registry in [AGENTS.md](AGENTS.md).
 
 ## Requirements
 
