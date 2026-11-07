@@ -1,0 +1,114 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 7 Nov 2026 14:21:16 +0800
+Subject: [PATCH] Add Keep Vanilla Stronghold Rings when DeerFolia
+ Bedrock-Style Stronghold enabled
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/worldgen/BedrockOuterStrongholdPlacement.java b/src/main/java/org/tumblemc/tumble/worldgen/BedrockOuterStrongholdPlacement.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..29caae9f50c8eab15a10122db26be9fd78bd07d7
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/worldgen/BedrockOuterStrongholdPlacement.java
+@@ -0,0 +1,101 @@
++package org.tumblemc.tumble.worldgen;
++
++import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
++import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
++import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
++import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
++import org.jspecify.annotations.Nullable;
++
++/**
++ * Tumble - Bedrock-style stronghold generation (hybrid variant).
++ *
++ * <p>Random-spread stronghold placement that refuses to place strongholds inside the vanilla
++ * concentric ring zone. It is meant to be added as an extra structure set next to the untouched
++ * vanilla {@code minecraft:strongholds} set, so the 128 ring strongholds stay exactly vanilla
++ * while strongholds outside the ring zone become an infinite random distribution.</p>
++ *
++ * <p>The ring zone radius is derived from the vanilla {@link ConcentricRingsStructurePlacement}
++ * parameters instead of a user config: worst-case ring center distance, worst-case ring jitter,
++ * the 112-block biome search offset used while generating ring positions, plus a safety margin.</p>
++ */
++public final class BedrockOuterStrongholdPlacement extends RandomSpreadStructurePlacement {
++    // ChunkGeneratorStructureState#generateRingPositions searches biomes within 112 blocks (7 chunks).
++    private static final int BIOME_SEARCH_PADDING_CHUNKS = 7;
++    // Ring stronghold structures can extend a few chunks outwards; keep a margin so the two sets do not overlap.
++    private static final int ZONE_MARGIN_CHUNKS = 16;
++    private static final int PLACEMENT_SALT = 10387319;
++
++    private final int ringZoneRadiusChunks;
++
++    public BedrockOuterStrongholdPlacement(
++        final int spacing,
++        final int separation,
++        final ConcentricRingsStructurePlacement vanillaRings
++    ) {
++        super(spacing, separation, RandomSpreadType.LINEAR, PLACEMENT_SALT);
++        this.ringZoneRadiusChunks = computeRingZoneRadius(vanillaRings);
++    }
++
++    /**
++     * Radius (in chunks, centered on chunk 0,0) inside which random strongholds are not allowed.
++     * {@code 0} means no exclusion zone.
++     */
++    public int ringZoneRadiusChunks() {
++        return this.ringZoneRadiusChunks;
++    }
++
++    @Override
++    protected boolean isPlacementChunk(final ChunkGeneratorStructureState state, final int sourceX, final int sourceZ) {
++        return this.isOutsideVanillaRingZone(sourceX, sourceZ) && super.isPlacementChunk(state, sourceX, sourceZ);
++    }
++
++    @Override
++    public boolean applyAdditionalChunkRestrictions(
++        final int sourceX,
++        final int sourceZ,
++        final long levelSeed,
++        final @Nullable Integer saltOverride
++    ) {
++        // Also reject ring-zone chunks in the fast path used by /locate, so it does not probe chunks
++        // that can never contain an outer random stronghold.
++        return this.isOutsideVanillaRingZone(sourceX, sourceZ)
++            && super.applyAdditionalChunkRestrictions(sourceX, sourceZ, levelSeed, saltOverride);
++    }
++
++    private boolean isOutsideVanillaRingZone(final int chunkX, final int chunkZ) {
++        if (this.ringZoneRadiusChunks <= 0) {
++            return true;
++        }
++        return (long) chunkX * (long) chunkX + (long) chunkZ * (long) chunkZ > (long) this.ringZoneRadiusChunks * this.ringZoneRadiusChunks;
++    }
++
++    /**
++     * Mirrors the ring growth math of {@code ChunkGeneratorStructureState#generateRingPositions}
++     * (distance starts at {@code 4 * distance}, grows by {@code distance * 6} per ring, ring jitter
++     * is at most {@code distance * 2.5} wide).
++     */
++    private static int computeRingZoneRadius(final ConcentricRingsStructurePlacement rings) {
++        final int distance = rings.distance();
++        final int count = rings.count();
++        if (distance <= 0 || count <= 0 || rings.spread() <= 0) {
++            return 0;
++        }
++
++        int spread = rings.spread();
++        int positionInCircle = 0;
++        int circle = 0;
++        int circleMax = 0;
++        for (int i = 0; i < count; i++) {
++            circleMax = Math.max(circleMax, circle);
++            if (++positionInCircle == spread) {
++                circle++;
++                positionInCircle = 0;
++                spread += 2 * spread / (circle + 1);
++                spread = Math.min(spread, count - i);
++            }
++        }
++
++        final double maxRingDistance = 4.0D * distance + (double) distance * circleMax * 6.0D + distance * 1.25D;
++        return (int) Math.ceil(maxRingDistance) + BIOME_SEARCH_PADDING_CHUNKS + ZONE_MARGIN_CHUNKS;
++    }
++}

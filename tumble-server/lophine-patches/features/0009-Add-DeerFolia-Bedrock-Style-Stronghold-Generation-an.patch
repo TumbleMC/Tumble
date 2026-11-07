@@ -1,0 +1,78 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 7 Nov 2026 14:21:59 +0800
+Subject: [PATCH] Add DeerFolia Bedrock-Style Stronghold Generation and Keep
+ Vanilla Ring Config
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/function/BedrockStrongholdConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/function/BedrockStrongholdConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..49000ccde5f1ecf639c7ade94135a69917f32b11
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/function/BedrockStrongholdConfig.java
+@@ -0,0 +1,35 @@
++package org.tumblemc.tumble.config.modules.function;
++
++import me.earthme.luminol.api.config.annotation.ConfigClassInfo;
++import me.earthme.luminol.api.config.annotation.ConfigInfo;
++import me.earthme.luminol.api.config.annotation.DoNotLoad;
++import me.earthme.luminol.api.config.annotation.NeedRun;
++import me.earthme.luminol.api.config.enums.EnumConfigCategory;
++import me.earthme.luminol.api.config.enums.EnumLoadType;
++import me.earthme.luminol.api.config.enums.EnumRunnableType;
++
++@ConfigClassInfo(category = EnumConfigCategory.FUNCTION, name = "bedrock_stronghold")
++public class BedrockStrongholdConfig {
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "enabled")
++    public static boolean enabled = false;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "spacing")
++    public static int spacing = 48;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "separation")
++    public static int separation = 12;
++
++    @DoNotLoad(when = EnumLoadType.RELOAD)
++    @ConfigInfo(name = "keep_vanilla_rings")
++    public static boolean keep_vanilla_rings = false;
++
++    @NeedRun(when = EnumRunnableType.ON_LOADED)
++    public void onLoaded() {
++        if (spacing < 2) spacing = 2;
++        if (separation < 0) separation = 0;
++        if (separation >= spacing) separation = spacing - 1;
++    }
++}
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index 524deb0ce3bbf8a91e0625a19f866ae1831a66bd..e6515daadf5705fb005b5bb79f08924e34827421 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -1588,6 +1588,10 @@
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "Allows applying enchantments on tools or armour that are normally not applicable.\nFor example, sharpness on a pickaxe.",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
++  "tumble.function.bedrock_stronghold.enabled.comment": "Replace vanilla stronghold placement with a Bedrock-style random distribution.",
++  "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "Keep the vanilla 128 ring-based strongholds inside the ring zone and randomize only strongholds outside it. When off, every stronghold uses the random distribution.",
++  "tumble.function.bedrock_stronghold.separation.comment": "Minimum distance between random strongholds in chunks. Must be less than spacing.",
++  "tumble.function.bedrock_stronghold.spacing.comment": "Average distance between random strongholds in chunks. 48 means roughly one stronghold per 48x48 chunks.",
+   "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index edcaab19db6c871a99dbb15675a808f658a69540..f0cd4b61321c73efd0306d6ff88e17a738dff21c 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -1588,6 +1588,10 @@
+   "tumble.function.anvil.allow_inapplicable_enchants.comment": "允许在通常不适用该附魔的工具或盔甲上附魔。\n例如：在镐上附魔锋利。",
+   "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
+   "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
++  "tumble.function.bedrock_stronghold.enabled.comment": "用基岩版风格随机分布替代原版要塞生成。",
++  "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "环区以内保留原版 128 个环状要塞,仅在环外使用随机分布;关闭时全部要塞使用随机分布。",
++  "tumble.function.bedrock_stronghold.separation.comment": "随机要塞之间的最小距离(区块),必须小于 spacing。",
++  "tumble.function.bedrock_stronghold.spacing.comment": "随机要塞之间的平均距离(区块)。48 表示大约每 48×48 区块一个要塞。",
+   "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "玩家进入挂机状态时发送一次。占位符:{player}。留空则关闭。支持 & 与 &#RRGGBB 颜色代码。",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "玩家恢复活动时发送。占位符:{player}、{saved_traffic}、{saved_bandwidth}。留空则关闭。",

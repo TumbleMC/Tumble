@@ -174,6 +174,74 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 3. `deerFolia$*` accessor 签名变化时，同步修改 `AfkNetworkManager` 中 13 处调用。
 4. 回归：编译通过 + 挂机阈值触发进入/退出消息 + `/afknetstats` 有数据 + 恢复活动后区块/实体无幽灵。
 
+### DeerFoliaPlus：Bedrock-style Stronghold Generation（基岩版风格要塞生成）
+
+**来源**
+
+| 项 | 值 |
+|---|---|
+| 仓库 | https://github.com/LunaDeerMC/DeerFoliaPlus |
+| 分支 | `ver/26.3.x` |
+| 移植时 commit | `0cf3b7b`（2026-11-07） |
+| 功能说明 | `README.md` 第 8 行、配置表 37-43 行 |
+| 上游补丁 | `DeerFoliaPlus-server/minecraft-patches/features/0004-Bedrock-style-stronghold-generation.patch` |
+| 上游配置 | `DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/configurations/DeerFoliaPlusConfiguration.java` 57-67 行 |
+| 上游测试 | `DeerFoliaPlus-server/src/test/java/cn/lunadeer/mc/deerfoliaplus/upgrade/StrongholdPlacementUpgradeTest.java` |
+
+**行为与开关**
+
+| `enabled` | `keep_vanilla_rings` | 结果 |
+|---|---|---|
+| false | 任意 | 纯原版 128 环 |
+| true | false | 全部随机（替换原版 strongholds 放置） |
+| true | true | 环内原版 128 + 环外随机（混合模式） |
+
+**Tumble 落点**
+
+| 类型 | 路径 |
+|---|---|
+| minecraft 补丁（全随机） | `tumble-server/minecraft-patches/features/0004-Add-DeerFolia-Bedrock-Style-Stronghold-Generation.patch` |
+| minecraft 补丁（混合模式） | `tumble-server/minecraft-patches/features/0005-Add-Keep-Vanilla-Stronghold-Rings-when-DeerFolia-Bed.patch` |
+| 自定义 placement 类 | `tumble-server/lophine-patches/features/0008-Add-Keep-Vanilla-Stronghold-Rings-when-DeerFolia-Bed.patch` |
+| 配置 + lang | `tumble-server/lophine-patches/features/0009-Add-DeerFolia-Bedrock-Style-Stronghold-Generation-an.patch` |
+| 类文件 | `lophine-server/src/main/java/org/tumblemc/tumble/worldgen/BedrockOuterStrongholdPlacement.java` |
+| 配置类 | `lophine-server/src/main/java/org/tumblemc/tumble/config/modules/function/BedrockStrongholdConfig.java` |
+| lang | `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`，前缀 `tumble.function.bedrock_stronghold.*` |
+
+**注入点**（`tumble-server/src/minecraft/java/`，行号为 2026-11-07 状态）
+
+| 文件 | 方法 / 锚点 | 行 | 注入内容 |
+|---|---|---|---|
+| `net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java` | `injectSpigot`：strongholds 判断分支 | 83-106 | `enabled && !keep_vanilla_rings` 时替换为 RandomSpread（salt `10387319`） |
+| 同上 | `injectSpigot`：stream 收集之后 | 140-164 | `enabled && keep_vanilla_rings` 时追加 `Holder.direct(BedrockOuterStrongholdPlacement)`；返回 `List.copyOf` |
+
+**自定义 placement 依赖（上游更新时需要核对的内部 API）**
+
+- `RandomSpreadStructurePlacement(int spacing, int separation, RandomSpreadType, int salt)`
+- `protected boolean isPlacementChunk(ChunkGeneratorStructureState, int, int)`
+- `public boolean applyAdditionalChunkRestrictions(int, int, long, @Nullable Integer)`
+- `ConcentricRingsStructurePlacement#distance()/spread()/count()`
+- `ChunkGeneratorStructureState#generateRingPositions` 的环增长公式（类内 `computeRingZoneRadius` 复制了该算法）
+- `Holder.direct` / `Holder.is(ResourceKey)` 语义（direct holder 无 key，`is(ResourceKey)` 恒 false）
+
+**配置键**（`tumble_config/tumble_global_config.toml`，段 `[function.bedrock_stronghold]`）
+
+`enabled`、`keep_vanilla_rings`、`spacing`、`separation`
+
+**更新核对清单**
+
+1. 上游改动检查：
+   `git -C DeerFoliaPlus log --oneline -- DeerFoliaPlus-server/minecraft-patches/features/0004-Bedrock-style-stronghold-generation.patch DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/configurations/DeerFoliaPlusConfiguration.java DeerFoliaPlus-server/src/test/java/cn/lunadeer/mc/deerfoliaplus/upgrade/StrongholdPlacementUpgradeTest.java`
+2. 对比 DeerFoliaPlus `0004` 与 Tumble `0004` / `0005` 的 hunk，重点锚点：`injectSpigot` 里的 Spigot 种子 switch、Paper `KeyedRandomSpreadStructurePlacement` 分支、`StructureSet` 构造器。
+3. `BedrockOuterStrongholdPlacement` 依赖的四组内部 API（见上）任一签名变化 → 编译期报错，按新签名改。
+4. 环半径公式:若 `generateRingPositions` 的 `distance/spread/count` 或 jitter/biome 搜索半径变化,同步 `computeRingZoneRadius`;vanilla 32/3/128 当前得出 `R=1535 chunks`。
+5. 回归:
+   - 三种开关组合各自的分布(全随机/混合/纯原版);
+   - `/locate structure minecraft:stronghold` 环内命中原版环、环外命中随机;
+   - 环边界无重叠、环内随机数为 0;
+   - Spigot `stronghold-seed` 仍只影响环;Lophine Secure Seed 下随机分布走 crypto random;
+   - datapack 把 strongholds 改成非 `concentric_rings` 时混合模式不追加外层集合。
+
 ## 常用命令速查
 
 ```bash

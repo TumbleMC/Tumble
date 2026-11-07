@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 7 Nov 2026 12:10:15 +0800
+Subject: [PATCH] Add DeerFolia Bedrock-Style Stronghold Generation
+
+
+diff --git a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
+index dbd6a7c5d38a8ac17837096332e9829b439d53fa..7b1f0b18ccd0bd5e2fd3fb4d6be23005ec893f87 100644
+--- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
++++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
+@@ -85,6 +85,21 @@ public class ChunkGeneratorStructureState {
+             StructureSet structureset = structureSet.value();
+             final Holder<StructureSet> newHolder; // Paper - Add missing structure set seed configs
+             net.minecraft.resources.Identifier id = structureSet.unwrapKey().orElseThrow().identifier();
++            // DeerFoliaPlus start - Bedrock-style stronghold generation //Tumble
++            if (structureset.placement() instanceof ConcentricRingsStructurePlacement concentricConfig
++                    && structureSet.unwrapKey().isPresent()
++                    && structureSet.unwrapKey().get().equals(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.STRONGHOLDS)
++                    && org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.enabled) {
++                structureset = new StructureSet(structureset.structures(),
++                        new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(
++                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.spacing,
++                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.separation,
++                                net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR,
++                                10387319 // DeerFoliaPlus - unique salt for random stronghold placement //Tumble
++                        ));
++                newHolder = Holder.direct(structureset);
++            } else
++            // DeerFoliaPlus end - Bedrock-style stronghold generation //Tumble
+             if (structureset.placement() instanceof net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement randomConfig && id.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE)) { // Paper - Add missing structure set seed configs; check namespace cause datapacks could add structure sets with the same path
+                 String name = id.getPath();
+                 int seed = switch (name) {

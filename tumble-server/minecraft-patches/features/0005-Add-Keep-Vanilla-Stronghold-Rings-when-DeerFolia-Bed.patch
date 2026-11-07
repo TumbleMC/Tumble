@@ -1,0 +1,86 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sat, 7 Nov 2026 14:21:16 +0800
+Subject: [PATCH] Add Keep Vanilla Stronghold Rings when DeerFolia
+ Bedrock-Style Stronghold enabled
+
+
+diff --git a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
+index 7b1f0b18ccd0bd5e2fd3fb4d6be23005ec893f87..e3966b0840f17bc2131769bf609aace635507b42 100644
+--- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
++++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
+@@ -81,23 +81,30 @@ public class ChunkGeneratorStructureState {
+ 
+     // Spigot start
+     private static List<Holder<StructureSet>> injectSpigot(List<Holder<StructureSet>> structures, org.spigotmc.SpigotWorldConfig config) {
+-        return structures.stream().map((structureSet) -> {
++        final List<Holder<StructureSet>> patched = structures.stream().map((structureSet) -> { // Tumble start - Keep Vanilla Ring with DeerFolia Bedrock Style Stronghold Generation.
+             StructureSet structureset = structureSet.value();
+             final Holder<StructureSet> newHolder; // Paper - Add missing structure set seed configs
+             net.minecraft.resources.Identifier id = structureSet.unwrapKey().orElseThrow().identifier();
+-            // DeerFoliaPlus start - Bedrock-style stronghold generation //Tumble
+-            if (structureset.placement() instanceof ConcentricRingsStructurePlacement concentricConfig
++            // DeerFoliaPlus start - Bedrock-style stronghold generation // Tumble
++            if (structureset.placement() instanceof ConcentricRingsStructurePlacement
+                     && structureSet.unwrapKey().isPresent()
+                     && structureSet.unwrapKey().get().equals(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.STRONGHOLDS)
+                     && org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.enabled) {
+-                structureset = new StructureSet(structureset.structures(),
+-                        new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(
+-                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.spacing,
+-                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.separation,
+-                                net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR,
+-                                10387319 // DeerFoliaPlus - unique salt for random stronghold placement //Tumble
+-                        ));
+-                newHolder = Holder.direct(structureset);
++                // Tumble start
++                if (org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.keep_vanilla_rings) {
++                    // Tumble - hybrid mode: keep the vanilla ring set untouched; the outer random set is appended below
++                    newHolder = structureSet;
++                //Tumble end
++                } else {
++                    structureset = new StructureSet(structureset.structures(),
++                            new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(
++                                    org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.spacing,
++                                    org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.separation,
++                                    net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR,
++                                    10387319 // DeerFoliaPlus - unique salt for random stronghold placement //Tumble
++                            ));
++                    newHolder = Holder.direct(structureset);
++                }
+             } else
+             // DeerFoliaPlus end - Bedrock-style stronghold generation //Tumble
+             if (structureset.placement() instanceof net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement randomConfig && id.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE)) { // Paper - Add missing structure set seed configs; check namespace cause datapacks could add structure sets with the same path
+@@ -132,7 +139,31 @@ public class ChunkGeneratorStructureState {
+             }
+             return newHolder;
+             // Paper end - Add missing structure set seed configs
+-        }).collect(Collectors.toUnmodifiableList());
++        }).collect(Collectors.toCollection(ArrayList::new));
++        // Tumble end
++
++        // Tumble start - Bedrock-style stronghold generation: hybrid mode appends an extra random-spread stronghold set that only generates outside the vanilla concentric ring zone.
++        if (org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.enabled
++                && org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.keep_vanilla_rings) {
++            for (final Holder<StructureSet> structureSet : structures) {
++                if (!structureSet.is(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.STRONGHOLDS)) {
++                    continue;
++                }
++                final StructureSet vanillaStrongholds = structureSet.value();
++                if (!(vanillaStrongholds.placement() instanceof ConcentricRingsStructurePlacement vanillaRings)) {
++                    continue;
++                }
++                patched.add(Holder.direct(new StructureSet(vanillaStrongholds.structures(),
++                        new org.tumblemc.tumble.worldgen.BedrockOuterStrongholdPlacement(
++                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.spacing,
++                                org.tumblemc.tumble.config.modules.function.BedrockStrongholdConfig.separation,
++                                vanillaRings))));
++                break;
++            }
++        }
++        // Tumble end - Bedrock-style stronghold generation
++
++        return List.copyOf(patched);
+     }
+     // Spigot end
+ 
