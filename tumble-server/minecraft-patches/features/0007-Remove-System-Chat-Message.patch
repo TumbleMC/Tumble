@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sun, 8 Nov 2026 13:09:30 +0800
+Subject: [PATCH] Remove System Chat Message
+
+
+diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
+index 014346dd80d5093b45c07951f1e21061fbb46239..08b0bd07deb0bcc0cec0cff9df40735d11f12f1a 100644
+--- a/net/minecraft/server/MinecraftServer.java
++++ b/net/minecraft/server/MinecraftServer.java
+@@ -2248,9 +2248,10 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     @Override
+     public void sendSystemMessage(final Component message) {
++        String systemChat = org.tumblemc.tumble.config.modules.misc.RemoveSystemChatConfig.enabled ? "" : "System chat: "; // Tumble - Remove Silly "System chat: "
+         // Paper start - Log messages with colors
+         LOGGER.info(io.papermc.paper.adventure.PaperAdventure.ANSI_SERIALIZER.serialize(
+-            net.kyori.adventure.text.Component.text().content("System chat: ")
++            net.kyori.adventure.text.Component.text().content(systemChat) // Tumble - Remove Silly "System chat: "
+                 .append(io.papermc.paper.adventure.PaperAdventure.asAdventure(message)).build()
+         ));
+         // Paper end - Log messages with colors

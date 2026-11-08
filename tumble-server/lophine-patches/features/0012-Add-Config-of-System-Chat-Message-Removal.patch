@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NatJerry <xiaomajunqwq123@outlook.com>
+Date: Sun, 8 Nov 2026 13:09:49 +0800
+Subject: [PATCH] Add Config of System Chat Message Removal
+
+
+diff --git a/src/main/java/org/tumblemc/tumble/config/modules/misc/RemoveSystemChatConfig.java b/src/main/java/org/tumblemc/tumble/config/modules/misc/RemoveSystemChatConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d66f4353424769df09591e9453f3cf66066f2453
+--- /dev/null
++++ b/src/main/java/org/tumblemc/tumble/config/modules/misc/RemoveSystemChatConfig.java
+@@ -0,0 +1,11 @@
++package org.tumblemc.tumble.config.modules.misc;
++
++import me.earthme.luminol.api.config.annotation.ConfigClassInfo;
++import me.earthme.luminol.api.config.annotation.ConfigInfo;
++import me.earthme.luminol.api.config.enums.EnumConfigCategory;
++
++@ConfigClassInfo(category = EnumConfigCategory.MISC, name = "remove_system_chat")
++public class RemoveSystemChatConfig {
++    @ConfigInfo(name = "enabled")
++    public static boolean enabled = false;
++}
+diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
+index 79f2652dc62e39198c3224f22e0713702729216c..2ee774188aa3a3550724b4f6a9d5ac5efa43e1e5 100644
+--- a/src/main/resources/assets/lophine/lang/en_us.json
++++ b/src/main/resources/assets/lophine/lang/en_us.json
+@@ -1638,6 +1638,8 @@
+   "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596: repair savanna_small_farm placement below an internal terrain-matching road connector.",
+   "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "Allow vanilla village snow piles affected by the same shallow-world height check.",
+   "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550: repair the snowy_shepherds_house_1 entrance in normal and zombie villages.",
++  "tumble.misc.remove_system_chat.comment": "Remove the \"System chat: \" prefix from messages printed to the console.",
++  "tumble.misc.remove_system_chat.enabled.comment": "Drop the \"System chat: \" prefix when server messages are logged to the console. The message and its colors are kept.",
+   "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
+diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
+index e3debe8b5163de10bbb250740e4ea1a208c92282..d94566670a6a72027c7a2028e57690c350c14873 100644
+--- a/src/main/resources/assets/lophine/lang/zh_cn.json
++++ b/src/main/resources/assets/lophine/lang/zh_cn.json
+@@ -1638,6 +1638,8 @@
+   "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596:修复 savanna_small_farm 被内部地形匹配道路连接件盖住的问题。",
+   "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "允许受同一浅层世界高度检查影响的原版村庄雪堆放置。",
+   "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550:修复普通与僵尸村庄中 snowy_shepherds_house_1 的入口。",
++  "tumble.misc.remove_system_chat.comment": "移除控制台输出中的“System chat: ”前缀。",
++  "tumble.misc.remove_system_chat.enabled.comment": "服务端消息输出到控制台时去掉“System chat: ”前缀,消息内容与颜色保留。",
+   "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本.",
+   "tumble.optimizations.afk_network.afk_enter_message.comment": "玩家进入挂机状态时发送一次。占位符:{player}。留空则关闭。支持 & 与 &#RRGGBB 颜色代码。",
+   "tumble.optimizations.afk_network.afk_exit_message.comment": "玩家恢复活动时发送。占位符:{player}、{saved_traffic}、{saved_bandwidth}。留空则关闭。",
