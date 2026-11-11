@@ -282,10 +282,10 @@ index 196c01fe5f200ed57e6f23e0939cac616305571a..452be413d4ef790ad693756a6f7cf3fd
          int maxBatchSize = Mth.floor(this.batchQuota);
          List<LevelChunk> chunks;
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8f029e378 100644
+index 6a9d84cc53e51ad93dbd8634f4b36ee2d03569f2..4b8da8340556d03e51bb754c5ce5ef6f7307fae5 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -536,7 +536,10 @@ public class ServerGamePacketListenerImpl
+@@ -538,7 +538,10 @@ public class ServerGamePacketListenerImpl
      public void handlePlayerInput(final ServerboundPlayerInputPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          // CraftBukkit start
@@ -297,7 +297,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
              PlayerInputEvent event = new PlayerInputEvent(this.player.getBukkitEntity(), new org.bukkit.craftbukkit.CraftInput(packet.input()));
              this.cserver.getPluginManager().callEvent(event);
          }
-@@ -560,7 +563,10 @@ public class ServerGamePacketListenerImpl
+@@ -562,7 +565,10 @@ public class ServerGamePacketListenerImpl
          if (this.player.getVehicle() != null && (carpetInput.jump() || carpetInput.shift() || carpetInput.forward() || carpetInput.backward() || carpetInput.left() || carpetInput.right())) carpet.script.CarpetEventServer.Event.PLAYER_RIDES.onMountControls(this.player, carpetInput.left() == carpetInput.right() ? 0 : carpetInput.left() ? -1 : 1, carpetInput.forward() == carpetInput.backward() ? 0 : carpetInput.forward() ? 1 : -1, carpetInput.jump(), carpetInput.shift());
          this.player.setLastClientInput(packet.input());
          if (this.hasClientLoaded()) {
@@ -309,7 +309,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
              // this.player.setShiftKeyDown(packet.input().shift()); // Paper - move up and only set if event is not cancelled.
          }
          // Paper start - Add option to make parrots stay
-@@ -591,6 +597,14 @@ public class ServerGamePacketListenerImpl
+@@ -593,6 +599,14 @@ public class ServerGamePacketListenerImpl
          if (containsInvalidValues(movingToPos.x(), movingToPos.y(), movingToPos.z(), movingTo.yRot(), movingTo.xRot())) {
              this.disconnect(Component.translatable("multiplayer.disconnect.invalid_vehicle_movement"), org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_VEHICLE_MOVEMENT); // Paper - kick event cause
          } else if (!this.updateAwaitingTeleport() && this.hasClientLoaded()) {
@@ -324,7 +324,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
              Entity vehicle = this.player.getRootVehicle();
              // Paper start - Don't allow vehicle movement from players while teleporting
              if (this.awaitingPositionFromClient != null || this.player.isImmobile() || vehicle.isRemoved()) {
-@@ -1582,6 +1596,16 @@ public class ServerGamePacketListenerImpl
+@@ -1584,6 +1598,16 @@ public class ServerGamePacketListenerImpl
                  this.receivedPositionThisTick = true;
              }
  
@@ -341,7 +341,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
              if (!this.player.wonGame && !this.player.isImmobile()) { // CraftBukkit
                  if (this.tickCount == 0) {
                      this.resetPosition();
-@@ -2567,6 +2591,7 @@ public class ServerGamePacketListenerImpl
+@@ -2569,6 +2593,7 @@ public class ServerGamePacketListenerImpl
      @Override
      public void onDisconnect(final DisconnectionDetails details) {
          if (!this.waitingForSwitchToConfig) carpet.script.external.ScarpetRuntime.onLeave(this.player, details.reason());
@@ -349,7 +349,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
          LOGGER.info("{} lost connection: {}", this.player.getPlainTextName(), details.reason().getString());
          // Paper start - Fix kick event leave message not being sent
          final net.kyori.adventure.text.Component quitMessage = details.quitMessage().map(io.papermc.paper.adventure.PaperAdventure::asAdventure).orElse(null);
-@@ -2701,6 +2726,7 @@ public class ServerGamePacketListenerImpl
+@@ -2713,6 +2738,7 @@ public class ServerGamePacketListenerImpl
              return;
          }
          // CraftBukkit end
@@ -357,7 +357,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
          Optional<LastSeenMessages> unpackedLastSeen = this.unpackAndApplyLastSeen(packet.lastSeenMessages());
          if (!unpackedLastSeen.isEmpty()) {
              this.tryHandleChat(packet.message(), false, () -> {
-@@ -2725,6 +2751,7 @@ public class ServerGamePacketListenerImpl
+@@ -2737,6 +2763,7 @@ public class ServerGamePacketListenerImpl
  
      @Override
      public void handleChatCommand(final ServerboundChatCommandPacket packet) {
@@ -365,7 +365,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
          this.tryHandleChat(packet.command(), true, () -> {
              // CraftBukkit start - SPIGOT-7346: Prevent disconnected players from executing commands
              if (this.player.hasDisconnected()) {
-@@ -2764,6 +2791,7 @@ public class ServerGamePacketListenerImpl
+@@ -2776,6 +2803,7 @@ public class ServerGamePacketListenerImpl
  
      @Override
      public void handleSignedChatCommand(final ServerboundChatCommandSignedPacket packet) {
@@ -374,7 +374,7 @@ index 15b21ab2ce0ee46f99ee12329f288addd6f017df..cf4288394acdd8d73284206099e75cb8
          if (!unpackedLastSeen.isEmpty()) {
              this.tryHandleChat(packet.command(), true, () -> {
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index 09432be8006f8b515386098f003d49e77a1edb1d..04fabcb367d7ba51d308129d7ec79ea6ee05981a 100644
+index 4799d3530105737305aa5e85604f5fb2dac3733d..d11049e1dc71f25a2a8a4de75c5cf0176486f489 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -374,6 +374,7 @@ public abstract class PlayerList {

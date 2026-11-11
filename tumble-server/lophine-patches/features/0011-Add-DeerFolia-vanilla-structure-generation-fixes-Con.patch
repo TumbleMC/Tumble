@@ -220,10 +220,10 @@ index 0000000000000000000000000000000000000000..925d674e8e904b4cc7a99c354d5c79fb
 +    }
 +}
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index e6515daadf5705fb005b5bb79f08924e34827421..79f2652dc62e39198c3224f22e0713702729216c 100644
+index 0ed68fb7a32e30c74439388ddbabd62516b945b5..db5376dd29325f13e99867aa2130106673b35f8f 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1592,6 +1592,52 @@
+@@ -1606,6 +1606,52 @@
    "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "Keep the vanilla 128 ring-based strongholds inside the ring zone and randomize only strongholds outside it. When off, every stronghold uses the random distribution.",
    "tumble.function.bedrock_stronghold.separation.comment": "Minimum distance between random strongholds in chunks. Must be less than spacing.",
    "tumble.function.bedrock_stronghold.spacing.comment": "Average distance between random strongholds in chunks. 48 means roughly one stronghold per 48x48 chunks.",
@@ -277,10 +277,10 @@ index e6515daadf5705fb005b5bb79f08924e34827421..79f2652dc62e39198c3224f22e071370
    "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
    "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index f0cd4b61321c73efd0306d6ff88e17a738dff21c..e3debe8b5163de10bbb250740e4ea1a208c92282 100644
+index dc9de5263170c9fd551a2918690fe51772fac61c..291cdbd4d950d0ff5a39fb33e8e85659638e4ec6 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1592,6 +1592,52 @@
+@@ -1606,6 +1606,52 @@
    "tumble.function.bedrock_stronghold.keep_vanilla_rings.comment": "环区以内保留原版 128 个环状要塞,仅在环外使用随机分布;关闭时全部要塞使用随机分布。",
    "tumble.function.bedrock_stronghold.separation.comment": "随机要塞之间的最小距离(区块),必须小于 spacing。",
    "tumble.function.bedrock_stronghold.spacing.comment": "随机要塞之间的平均距离(区块)。48 表示大约每 48×48 区块一个要塞。",

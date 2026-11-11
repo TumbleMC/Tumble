@@ -47,10 +47,10 @@ index 0000000000000000000000000000000000000000..49000ccde5f1ecf639c7ade94135a699
 +    }
 +}
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index 524deb0ce3bbf8a91e0625a19f866ae1831a66bd..e6515daadf5705fb005b5bb79f08924e34827421 100644
+index f52552d2e9debb9e136d172f0d3b8fe1631cb098..0ed68fb7a32e30c74439388ddbabd62516b945b5 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1588,6 +1588,10 @@
+@@ -1602,6 +1602,10 @@
    "tumble.function.anvil.allow_inapplicable_enchants.comment": "Allows applying enchantments on tools or armour that are normally not applicable.\nFor example, sharpness on a pickaxe.",
    "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
    "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
@@ -62,10 +62,10 @@ index 524deb0ce3bbf8a91e0625a19f866ae1831a66bd..e6515daadf5705fb005b5bb79f08924e
    "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
    "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index edcaab19db6c871a99dbb15675a808f658a69540..f0cd4b61321c73efd0306d6ff88e17a738dff21c 100644
+index 4b366e12437d200f7e367647b68661b54fd44f21..dc9de5263170c9fd551a2918690fe51772fac61c 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1588,6 +1588,10 @@
+@@ -1602,6 +1602,10 @@
    "tumble.function.anvil.allow_inapplicable_enchants.comment": "允许在通常不适用该附魔的工具或盔甲上附魔。\n例如：在镐上附魔锋利。",
    "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
    "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",

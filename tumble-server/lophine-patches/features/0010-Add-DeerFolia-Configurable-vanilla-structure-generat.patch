@@ -1124,6 +1124,1315 @@ index 0000000000000000000000000000000000000000..3c8458063a329f175a959ac0514be3da
 +        return Map.entry(Identifier.withDefaultNamespace("village/" + template), repair);
 +    }
 +}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a40185d1404142f4359eaf3759ace4abfd6ecf0c
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+@@ -0,0 +1,47 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:alter_ground",
++      "provider": "minecraft:podzol_beneath_tree"
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:mega_pine_foliage_placer",
++    "crown_height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 7,
++      "min_inclusive": 3
++    },
++    "offset": 0,
++    "radius": 0
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": false,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "lower_size": 1,
++    "upper_size": 2,
++    "limit": 3
++  },
++  "trunk_placer": {
++    "type": "minecraft:giant_trunk_placer",
++    "base_height": 13,
++    "height_rand_a": 2,
++    "height_rand_b": 14
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..88ee2fc49783ceea7591b5ba3034b47fa53d2412
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+@@ -0,0 +1,47 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:alter_ground",
++      "provider": "minecraft:podzol_beneath_tree"
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:mega_pine_foliage_placer",
++    "crown_height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 17,
++      "min_inclusive": 13
++    },
++    "offset": 0,
++    "radius": 0
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": false,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "lower_size": 1,
++    "upper_size": 2,
++    "limit": 2
++  },
++  "trunk_placer": {
++    "type": "minecraft:giant_trunk_placer",
++    "base_height": 13,
++    "height_rand_a": 2,
++    "height_rand_b": 14
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..bed976327ba27b3f41493832dc804450d4faf552
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+@@ -0,0 +1,73 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:cherry_foliage_placer",
++    "corner_hole_chance": 0.25,
++    "hanging_leaves_chance": 0.16666667,
++    "hanging_leaves_extension_chance": 0.33333334,
++    "height": 5,
++    "offset": 0,
++    "radius": 4,
++    "wide_bottom_layer_hole_chance": 0.25
++  },
++  "foliage_provider": {
++    "id": "minecraft:cherry_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 3,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:cherry_trunk_placer",
++    "base_height": 7,
++    "branch_count": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 1,
++          "weight": 1
++        },
++        {
++          "data": 2,
++          "weight": 1
++        },
++        {
++          "data": 3,
++          "weight": 1
++        }
++      ]
++    },
++    "branch_end_offset_from_top": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 0,
++      "min_inclusive": -1
++    },
++    "branch_horizontal_length": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 2
++    },
++    "branch_start_offset_from_top": {
++      "max_inclusive": -3,
++      "min_inclusive": -4
++    },
++    "height_rand_a": 1,
++    "height_rand_b": 0
++  },
++  "trunk_provider": {
++    "id": "minecraft:cherry_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e0089179e0a1d0ada4c9fe35c504c85e9394c5f
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+@@ -0,0 +1,74 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:shelf_mushroom",
++      "probability": 0.4
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:poplar_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 6,
++      "min_inclusive": 5
++    },
++    "offset": 0,
++    "radius": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 5,
++          "weight": 5
++        },
++        {
++          "data": 6,
++          "weight": 5
++        },
++        {
++          "data": 7,
++          "weight": 1
++        },
++        {
++          "data": 8,
++          "weight": 1
++        }
++      ]
++    },
++    "side_hole_chance": 0.15
++  },
++  "foliage_provider": {
++    "id": "minecraft:red_poplar_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 3,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:poplar_trunk_placer",
++    "base_height": 7,
++    "branch_amount": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 1
++    },
++    "height_rand_a": 4,
++    "height_rand_b": 0,
++    "trunk_height_above_branches": 4
++  },
++  "trunk_provider": {
++    "id": "minecraft:poplar_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..754884b85b3196748ba47acacc2a049084a9db5c
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+@@ -0,0 +1,74 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:shelf_mushroom",
++      "probability": 0.4
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:poplar_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 6,
++      "min_inclusive": 5
++    },
++    "offset": 0,
++    "radius": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 5,
++          "weight": 5
++        },
++        {
++          "data": 6,
++          "weight": 5
++        },
++        {
++          "data": 7,
++          "weight": 1
++        },
++        {
++          "data": 8,
++          "weight": 1
++        }
++      ]
++    },
++    "side_hole_chance": 0.15
++  },
++  "foliage_provider": {
++    "id": "minecraft:orange_poplar_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 4,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:poplar_trunk_placer",
++    "base_height": 7,
++    "branch_amount": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 1
++    },
++    "height_rand_a": 4,
++    "height_rand_b": 0,
++    "trunk_height_above_branches": 4
++  },
++  "trunk_provider": {
++    "id": "minecraft:poplar_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..754884b85b3196748ba47acacc2a049084a9db5c
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+@@ -0,0 +1,74 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:shelf_mushroom",
++      "probability": 0.4
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:poplar_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 6,
++      "min_inclusive": 5
++    },
++    "offset": 0,
++    "radius": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 5,
++          "weight": 5
++        },
++        {
++          "data": 6,
++          "weight": 5
++        },
++        {
++          "data": 7,
++          "weight": 1
++        },
++        {
++          "data": 8,
++          "weight": 1
++        }
++      ]
++    },
++    "side_hole_chance": 0.15
++  },
++  "foliage_provider": {
++    "id": "minecraft:orange_poplar_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 4,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:poplar_trunk_placer",
++    "base_height": 7,
++    "branch_amount": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 1
++    },
++    "height_rand_a": 4,
++    "height_rand_b": 0,
++    "trunk_height_above_branches": 4
++  },
++  "trunk_provider": {
++    "id": "minecraft:poplar_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b922a23037f88ee3d1c2ebaa57a9fd4c1efa5ddf
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+@@ -0,0 +1,74 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:shelf_mushroom",
++      "probability": 0.4
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:poplar_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 6,
++      "min_inclusive": 5
++    },
++    "offset": 0,
++    "radius": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 5,
++          "weight": 5
++        },
++        {
++          "data": 6,
++          "weight": 5
++        },
++        {
++          "data": 7,
++          "weight": 1
++        },
++        {
++          "data": 8,
++          "weight": 1
++        }
++      ]
++    },
++    "side_hole_chance": 0.15
++  },
++  "foliage_provider": {
++    "id": "minecraft:yellow_poplar_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 4,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:poplar_trunk_placer",
++    "base_height": 7,
++    "branch_amount": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 1
++    },
++    "height_rand_a": 4,
++    "height_rand_b": 0,
++    "trunk_height_above_branches": 4
++  },
++  "trunk_provider": {
++    "id": "minecraft:poplar_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..19c08b6fd3507adefab305fb996166acf14dbfbe
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+@@ -0,0 +1,74 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [
++    {
++      "type": "minecraft:shelf_mushroom",
++      "probability": 0.4
++    }
++  ],
++  "foliage_placer": {
++    "type": "minecraft:poplar_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 6,
++      "min_inclusive": 5
++    },
++    "offset": 0,
++    "radius": {
++      "type": "minecraft:weighted_list",
++      "distribution": [
++        {
++          "data": 5,
++          "weight": 5
++        },
++        {
++          "data": 6,
++          "weight": 5
++        },
++        {
++          "data": 7,
++          "weight": 1
++        },
++        {
++          "data": 8,
++          "weight": 1
++        }
++      ]
++    },
++    "side_hole_chance": 0.15
++  },
++  "foliage_provider": {
++    "id": "minecraft:red_poplar_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 4,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:poplar_trunk_placer",
++    "base_height": 7,
++    "branch_amount": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 1
++    },
++    "height_rand_a": 4,
++    "height_rand_b": 0,
++    "trunk_height_above_branches": 4
++  },
++  "trunk_provider": {
++    "id": "minecraft:poplar_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..ac5163bc9a716b32cde49c9f0cc2855e3d3200e3
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+@@ -0,0 +1,37 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:acacia_foliage_placer",
++    "offset": 0,
++    "radius": 2
++  },
++  "foliage_provider": {
++    "id": "minecraft:acacia_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "upper_size": 2,
++    "limit": 3,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:forking_trunk_placer",
++    "base_height": 5,
++    "height_rand_a": 2,
++    "height_rand_b": 2
++  },
++  "trunk_provider": {
++    "id": "minecraft:acacia_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cf167d487049e5cc8e998e8480b5ba958d77c5e
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+@@ -0,0 +1,42 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:pine_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 3
++    },
++    "offset": 1,
++    "radius": 1
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "limit": 4,
++    "upper_size": 2,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:straight_trunk_placer",
++    "base_height": 6,
++    "height_rand_a": 4,
++    "height_rand_b": 0
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cf167d487049e5cc8e998e8480b5ba958d77c5e
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+@@ -0,0 +1,42 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:pine_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 3
++    },
++    "offset": 1,
++    "radius": 1
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "limit": 4,
++    "upper_size": 2,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:straight_trunk_placer",
++    "base_height": 6,
++    "height_rand_a": 4,
++    "height_rand_b": 0
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cf167d487049e5cc8e998e8480b5ba958d77c5e
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+@@ -0,0 +1,42 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:pine_foliage_placer",
++    "height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 4,
++      "min_inclusive": 3
++    },
++    "offset": 1,
++    "radius": 1
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "limit": 4,
++    "upper_size": 2,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:straight_trunk_placer",
++    "base_height": 6,
++    "height_rand_a": 4,
++    "height_rand_b": 0
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9f43745f3a0bc6aa35052563b5462babd786877a
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+@@ -0,0 +1,50 @@
++{
++  "type": "minecraft:tree",
++  "below_trunk_provider": "minecraft:soil_beneath_tree",
++  "decorators": [],
++  "foliage_placer": {
++    "type": "minecraft:spruce_foliage_placer",
++    "offset": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 2,
++      "min_inclusive": 0
++    },
++    "radius": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 3,
++      "min_inclusive": 2
++    },
++    "trunk_height": {
++      "type": "minecraft:uniform",
++      "max_inclusive": 2,
++      "min_inclusive": 1
++    }
++  },
++  "foliage_provider": {
++    "id": "minecraft:spruce_leaves",
++    "properties": {
++      "distance": "7",
++      "persistent": "false",
++      "waterlogged": "false"
++    }
++  },
++  "ignore_vines": true,
++  "minimum_size": {
++    "type": "minecraft:two_layers_feature_size",
++    "limit": 3,
++    "upper_size": 2,
++    "lower_size": 0
++  },
++  "trunk_placer": {
++    "type": "minecraft:straight_trunk_placer",
++    "base_height": 5,
++    "height_rand_a": 2,
++    "height_rand_b": 1
++  },
++  "trunk_provider": {
++    "id": "minecraft:spruce_log",
++    "properties": {
++      "axis": "y"
++    }
++  }
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4127efb9553ea93e600f1cde519773d8cdb5da70
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..27771966ef91c661060e6d0cb448e79b945473f9
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9fe96f7df766a097c721ab53edec72aa1723b366
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:cherry_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..adbc9869c8e1f05074a07124b4f6ddcab4638ab3
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:poplar_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..92d46c402428aaabb44220abe72381c1433f9d68
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:poplar_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..925786b6c9530b1d225ade18c38c2f1ed98b0cf5
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:poplar_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..49d336488146d333cdd65232c349b83ed61be71f
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:poplar_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c3feb3ded6acf9ed0a608680020fcf45e8ff3998
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:poplar_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..34fecd9129bce027165eadee20d566b197b15638
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_savanna_1",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:acacia_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..6325504c1de23f891b3a24e797920781b3babab8
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c132cad9c07b79b19e75af00ee4d649556e55e6c
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_taiga_2",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..7152cd5c20b660911dd597ff80aaafb2fe1951ce
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_taiga_7",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f2620fd600f8a26b39ecfbd2d116d3ef3ba8ff5
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/placed_feature/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+@@ -0,0 +1,12 @@
++{
++  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6",
++  "placement": [
++    {
++      "type": "minecraft:block_predicate_filter",
++      "predicate": {
++        "type": "minecraft:would_survive",
++        "state": "minecraft:spruce_sapling"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b94e06140e206e2daf30b712df9dfdb1e6e175a7
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/campsite_old_growth_pine_taiga_1",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..80eee2277c8c1075a80e7ae544adecbb6282b2ba
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/campsite_old_growth_spruce_taiga_4",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..863bf2c265daee36968f8154a2fc8c740148e70b
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_cherry_grove_1",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..ec2d3ad708e55848852ee9a2a67e4c227bad2627
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_1",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..d8aa33f0b6443af28e8cc57a34d7bd4a162b871a
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_2",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..59be17a112554a095d953bdb5cb5efe937cf56c6
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_3",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..462070b95b9b3f53b9ffaa17b87773c76771809c
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8563054865047957eec8334a9fa31eaedbb9be8
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_6",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9e00d1259e3dc5eb34b9f98992f40755331060b9
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_savanna_1.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_savanna_1",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..84b66b6544d859aed944fae9593284dbfc77adfc
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_snowy_taiga_10",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..850ef15be144a2b949912f69df45e8c8f4224491
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_2.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_taiga_2",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..eb13e2b26856e31fe88d24fef817468b56e82d63
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_taiga_7.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_taiga_7",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
+diff --git a/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5f176276e7d428e779302015b97531fd30d3ffdb
+--- /dev/null
++++ b/src/main/resources/data/minecraft/worldgen/template_pool/deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6.json
+@@ -0,0 +1,13 @@
++{
++  "elements": [
++    {
++      "element": {
++        "element_type": "minecraft:feature_pool_element",
++        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_windswept_forest_6",
++        "projection": "rigid"
++      },
++      "weight": 1
++    }
++  ],
++  "fallback": "minecraft:empty"
++}
 diff --git a/src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json b/src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json
 new file mode 100644
 index 0000000000000000000000000000000000000000..147c59f2fa17ee3d6989517f67f61bdcd17176f2

@@ -65,10 +65,10 @@ index 0000000000000000000000000000000000000000..5da3ef09efd2692e66f39732303c0113
 +}
 \ No newline at end of file
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index ef8404c95b8b76c47cdb1a83b174ecf6e649e54c..524deb0ce3bbf8a91e0625a19f866ae1831a66bd 100644
+index 72d0d74b1e2d6ff7d833d76083776834c70c8145..f52552d2e9debb9e136d172f0d3b8fe1631cb098 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1589,6 +1589,16 @@
+@@ -1603,6 +1603,16 @@
    "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
    "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
    "tumble.misc.update_check.enable_update_check.comment": "Set whether check new version when /version is performed.",
@@ -86,10 +86,10 @@ index ef8404c95b8b76c47cdb1a83b174ecf6e649e54c..524deb0ce3bbf8a91e0625a19f866ae1
    "vanilla.command.save-all.refactor.already": "Server is already in saving! Please wait...",
    "vanilla.command.save-all.refactor.failure": "At least one region failed to save!",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index cba3e8de1e1e813ae994c3c5da26b8386e45a71a..edcaab19db6c871a99dbb15675a808f658a69540 100644
+index 923555f750e7222217443483c1f01340437086fc..4b366e12437d200f7e367647b68661b54fd44f21 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1589,6 +1589,16 @@
+@@ -1603,6 +1603,16 @@
    "tumble.function.anvil.allow_incompatible_enchants.comment": "允许同时附上通常互不兼容的附魔。\n例如：保护与火焰保护，或时运与精准采集。",
    "tumble.function.anvil.replace_incompatible_enchants.comment": "当合并互不兼容的附魔时，\n不再保留物品上原有的附魔，\n而是用第二格物品上的附魔进行替换。",
    "tumble.misc.update_check.enable_update_check.comment": "设置输入/version时是否检测新版本.",
