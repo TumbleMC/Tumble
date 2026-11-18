@@ -77,10 +77,10 @@ index 8dc55bb7bebd51535df255fd4eb8bd7fcfb874e2..f06f5a3f613491c4c7ad9eb21d6d2f98
              if (this.delayedTicketOps.isEmpty()) {
                  return;
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 9a72aed3ff9859e35c23fcc034a198dc48928b94..413b104daad0bbe8a9b60c753294524b41e46de8 100644
+index a6f6cd0c995c20dd5eaf6bc16e0b3d7264e4b616..f72c860f94f61c2cf6d2b00309e63304f612e088 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -246,6 +246,7 @@ public class Commands {
+@@ -252,6 +252,7 @@ public class Commands {
          //ReloadCommand.register(this.dispatcher); // Folia - region threading
          RecipeCommand.register(this.dispatcher);
          FetchProfileCommand.register(this.dispatcher);
@@ -229,7 +229,7 @@ index 03b4614473addb5777434657a51e4865992d7e23..9df05fd01e85ea7a88ff3663d26229d1
                              ChunkMap.this.level.debugSynchronizers().registerEntity(this.entity);
                          }
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 6d68155a27dab82cbd15b82dea55892733994f91..6fc7f6bd668f530111fec062d346371378f20d57 100644
+index 273fd4c3f1d52506fd349cdc1a0f26276f7ab0fd..1c9d73ea9b6e9238e4d6cdc0fff5ab3960895911 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
 @@ -854,6 +854,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
@@ -240,7 +240,7 @@ index 6d68155a27dab82cbd15b82dea55892733994f91..6fc7f6bd668f530111fec062d3463713
          if (fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.forceRestock) {
              Inventory inventory = this.getInventory();
              var items = inventory.getNonEquipmentItems();
-@@ -3371,6 +3372,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -3374,6 +3375,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
  
      public void resetLastActionTime() {
          this.lastActionTime = Util.getMillis();
@@ -374,7 +374,7 @@ index 6a9d84cc53e51ad93dbd8634f4b36ee2d03569f2..4b8da8340556d03e51bb754c5ce5ef6f
          if (!unpackedLastSeen.isEmpty()) {
              this.tryHandleChat(packet.command(), true, () -> {
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index 4799d3530105737305aa5e85604f5fb2dac3733d..d11049e1dc71f25a2a8a4de75c5cf0176486f489 100644
+index a46ada083d9ea0db75c4759a64d3f896c968c4d6..07a320ad87e2607073d9823fda0c2dafa666bfe5 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -374,6 +374,7 @@ public abstract class PlayerList {

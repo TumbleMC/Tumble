@@ -16,10 +16,10 @@ index e5e89a4fe5daad6cc97bf157509a87e8b0e9b88f..ac3365f1d25bd9e05facfde8a63e7519
 +    public static boolean allow_higher_levels_cost = false;
  }
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index fda3fb80a59dc33afabde169a467378b1bc801ff..72d0d74b1e2d6ff7d833d76083776834c70c8145 100644
+index 2fe79b7a2fe968cd9fd976808446cafd2367c3e3..9c315e0e1bcc55099fb229947844142f5cf6fc02 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1598,6 +1598,7 @@
+@@ -1604,6 +1604,7 @@
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper": "Disable check for spigot/bukkit/paper plugin",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "Disable check for folia-supported for spigot/bukkit/paper plugin.\nATTENTION: No support will be provided if you enabled this.",
    "tumble.function.anvil.allow_higher_enchants_levels.comment": "Allows the ability to increase enchantments passed their maximum level.\nFor example, efficiency V + efficiency V = efficiency VI.",
@@ -28,10 +28,10 @@ index fda3fb80a59dc33afabde169a467378b1bc801ff..72d0d74b1e2d6ff7d833d76083776834
    "tumble.function.anvil.allow_incompatible_enchants.comment": "Allows applying enchantments together that are normally incompatible.\nFor example, protection and fire protection or fortune and silk touch.",
    "tumble.function.anvil.replace_incompatible_enchants.comment": "When applying enchantments together that are incompatible,\ninstead of using the enchantment in the base item,\nthe enchantment will be replaced by the enchantment on the secondary item.",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index 45acec02bf28760d88905de89c5af7c2113811a8..923555f750e7222217443483c1f01340437086fc 100644
+index d50deabb92981733287330a0fb9855677fac2a00..540aebc87893a175b8af5a2e3d658b88269a0135 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1598,6 +1598,7 @@
+@@ -1604,6 +1604,7 @@
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper": "禁用 spigot/bukkit/paper 插件检查",
    "luminol.unsupported.disable_check_for_folia_supported.disable_for_paper.comment": "禁用对 spigot/bukkit/paper 插件 folia-supported 的检查。\n注意：启用后将不提供支持。",
    "tumble.function.anvil.allow_higher_enchants_levels.comment": "允许附魔等级超过最大等级。\n例如：效率 V + 效率 V = 效率 VI。",

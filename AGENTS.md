@@ -290,8 +290,9 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 - 总开关 `enabled`（默认 true）+ 44 个独立修复开关；关闭总开关时全部修复不生效。
 - 修复在结构模板加载时重写 NBT（`StructureGenerationFixes.openTemplate`），只对原版 `minecraft:core` 包、且与内置基线哈希一致的模板/资源生效；datapack 覆盖模板、或模板/依赖资源被改动时原样返回。
 - 启动时快照一次开关；模板被 MC 缓存，因此**必须重启生效**，只影响之后生成的区块，不改写已有世界。
+- 树修复会把营地/帐篷结构里 jigsaw 的 `pool` 改成 `minecraft:deerfoliaplus/structure_fixes/trees/*`，这些池由本移植的 39 个 datapack JSON 提供；缺任一层时 `feature_pool_element` 回退 `minecraft:empty`，对应营地/帐篷的树不生成。
 
-**上游源码（7 个类 + 基线）**
+**上游源码（7 个类 + 基线 + 39 个数据包资源）**
 
 | 文件（`DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen/`） | 上游行数 | Tumble 行数 | 作用 |
 |---|---|---|---|
@@ -303,6 +304,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | `VillageStructureRepairs.java` | 136 | 136 | 村庄地基/道路连接空间 |
 | `AncientCityCampRepairs.java` | 70 | 70 | 远古城市营地变体 |
 | `src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json` | 1875 | 1875 | 原版模板/资源哈希基线（两端口 sha256 一致） |
+| `data/minecraft/worldgen/{feature,placed_feature,template_pool}/deerfoliaplus/structure_fixes/trees/*.json`（相对 `DeerFoliaPlus-server/src/main/resources/`） | 39 个文件 | 39 个文件 | 13 套树修复的 configured feature / placed feature / template pool；`TreeStructureRepairs` 重写 jigsaw pool 后由这些资源提供树 |
 | `configurations/StructureGenerationFixesConfiguration.java` | 254 | 未移植（改为 Luminol 配置模块） | YAML 配置 + 预校验 |
 
 **Tumble 落点**
@@ -314,6 +316,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | lophine 补丁（配置 + lang） | `tumble-server/lophine-patches/features/0011-Add-DeerFolia-vanilla-structure-generation-fixes-Con.patch` |
 | 代码 | `lophine-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen/`（7 个文件） |
 | 基线资源 | `lophine-server/src/main/resources/deerfoliaplus/structure-generation-fixes-baseline.json`（sha256 `580921b3…`） |
+| 数据包资源 | `lophine-server/src/main/resources/data/minecraft/worldgen/{feature,placed_feature,template_pool}/deerfoliaplus/structure_fixes/trees/`（39 个 JSON，含在 `0010` patch 内） |
 | 配置类 | `lophine-server/src/main/java/org/tumblemc/tumble/config/modules/function/StructureGenerationFixesConfig.java`（209 行） |
 | lang | `lophine-server/src/main/resources/assets/lophine/lang/{en_us,zh_cn}.json`，前缀 `tumble.function.structure_generation_fixes.*`（46 键 = 类注释 + `enabled` + 44 分项） |
 
@@ -324,6 +327,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | 6 个 worldgen 类（除 `StructureGenerationFixes`） | 上游原样 | 与上游逐行一致（diff 0 行） |
 | `StructureGenerationFixes` 的 `openTemplate`、Catalog、基线校验 | 上游原样 | 逻辑未改 |
 | 基线 JSON | 上游原样 | 内容与上游 sha256 一致 |
+| 39 个数据包资源（feature / placed_feature / template_pool） | 上游原样 | 内容与上游一致（仅 CRLF→LF）；三层缺一层即 `Empty or non-existent pool`，对应树不生成 |
 | MC 4 个文件的 5 个注入 hunk | 上游原样 + 注释 | 与上游 `0009` 的 hunk 一一对应，仅行尾追加 `// Tumble` |
 | `initialize()` / `snapshot()` 改读静态配置字段 | **Tumble 独有** | 上游从 YAML 配置对象读；Tumble 直接读 `StructureGenerationFixesConfig`，标记 `// Tumble start/end` |
 | `StructureGenerationFixesConfig` 配置模块 | **Tumble 独有** | Luminol `@ConfigInfo(directory = {...})` 子表；45 键（`enabled` + 44 分项）；全部 `@DoNotLoad(RELOAD)`；`@NeedRun(ON_LOADED)` 调 `initialize()` |
@@ -348,12 +352,13 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 **更新核对清单**
 
 1. 上游改动检查：
-   `git -C DeerFoliaPlus log --oneline -- DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen DeerFoliaPlus-server/src/main/resources/deerfoliaplus DeerFoliaPlus-server/minecraft-patches/features/0009-Configurable-vanilla-structure-generation-repairs.patch`
+   `git -C DeerFoliaPlus log --oneline -- DeerFoliaPlus-server/src/main/java/cn/lunadeer/mc/deerfoliaplus/worldgen DeerFoliaPlus-server/src/main/resources/deerfoliaplus DeerFoliaPlus-server/src/main/resources/data/minecraft/worldgen DeerFoliaPlus-server/minecraft-patches/features/0009-Configurable-vanilla-structure-generation-repairs.patch`
 2. 逐文件 diff 7 个 worldgen 类：只有 `StructureGenerationFixes.java` 允许有 Tumble 差异（import、`initialize`/`snapshot`、`// Tumble` 标记），其余必须 0 行差异，否则按上游合入。
 3. 对比上游 `0009` 与 Tumble `0006` 的 hunk，重点锚点：`BlockPileFeature.place`、`FeaturePoolElement.place`、`JigsawPlacement` 的 `candidateFree`/`contextFree`、`ResourceManagerTemplateSource.load`；上游方法签名（`StructureTemplateManager`、`resourceManagerSource`、`VoxelShape`/`Shapes.joinIsNotEmpty`）变化会直接在编译期报错。
 4. 基线资源：与上游 sha256 必须一致；MC 数据版本升级或 vanilla 模板变动后要按上游 `StructureGenerationFixture`/`VanillaRepairResources` 重新生成，否则修复会静默不生效。
 5. 依赖的 `net.minecraft` API：`NbtIo.readCompressed`/`writeCompressed`、`NbtAccounter.create`、`Resource#sourcePackId`/`knownPackInfo`、`Identifier.parse`；任一变更需同步 `StructureGenerationFixes`。
 6. 回归：总开关关闭时原版模板不变；单项关闭时对应结构保持原版；全开时新建世界结构生成无报错；datapack 覆盖模板时回退原版；改配置后必须重启才生效。
+7. 数据包资源：39 个 JSON 必须按 `data/minecraft/worldgen/{feature,placed_feature,template_pool}/deerfoliaplus/structure_fixes/trees/` 三层齐全，且与上游逐文件一致。13 个 pool ID 与 `TreeStructureRepairs.SPECS` 的 replacement 列表一一对应（`campsite_snowy_taiga_3` 只挪装饰、无 replacement，不需要池）。缺文件时日志报 `Empty or non-existent pool minecraft:deerfoliaplus/structure_fixes/trees/<id>`，对应营地/帐篷的树不生成。
 
 ## 常用命令速查
 

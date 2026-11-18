@@ -22,10 +22,10 @@ index 0000000000000000000000000000000000000000..d66f4353424769df09591e9453f3cf66
 +    public static boolean enabled = false;
 +}
 diff --git a/src/main/resources/assets/lophine/lang/en_us.json b/src/main/resources/assets/lophine/lang/en_us.json
-index db5376dd29325f13e99867aa2130106673b35f8f..e23bc4e37e5b9d7b948d6f8289a80b409d81030b 100644
+index 2e81759faf163667a6203f924f3f0fed69cab2e3..c4f78d7f46ace1ed5c9daecf1750044202a36660 100644
 --- a/src/main/resources/assets/lophine/lang/en_us.json
 +++ b/src/main/resources/assets/lophine/lang/en_us.json
-@@ -1652,6 +1652,8 @@
+@@ -1658,6 +1658,8 @@
    "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596: repair savanna_small_farm placement below an internal terrain-matching road connector.",
    "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "Allow vanilla village snow piles affected by the same shallow-world height check.",
    "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550: repair the snowy_shepherds_house_1 entrance in normal and zombie villages.",
@@ -35,10 +35,10 @@ index db5376dd29325f13e99867aa2130106673b35f8f..e23bc4e37e5b9d7b948d6f8289a80b40
    "tumble.optimizations.afk_network.afk_enter_message.comment": "Message sent once when a player becomes AFK. Placeholder: {player}. Empty disables it. Supports & and &#RRGGBB color codes.",
    "tumble.optimizations.afk_network.afk_exit_message.comment": "Message sent when a player becomes active again. Placeholders: {player}, {saved_traffic}, {saved_bandwidth}. Empty disables it.",
 diff --git a/src/main/resources/assets/lophine/lang/zh_cn.json b/src/main/resources/assets/lophine/lang/zh_cn.json
-index 291cdbd4d950d0ff5a39fb33e8e85659638e4ec6..2620520a2e240d25db9269e9df40fc7e0b3b4e3c 100644
+index 8f79a348c4e477acebd45bd8ddb02e6d5cecb3de..389dd0941c8dbd867c2723c37df8ab368ceae038 100644
 --- a/src/main/resources/assets/lophine/lang/zh_cn.json
 +++ b/src/main/resources/assets/lophine/lang/zh_cn.json
-@@ -1652,6 +1652,8 @@
+@@ -1658,6 +1658,8 @@
    "tumble.function.structure_generation_fixes.villages.savanna_small_farm.comment": "MC-306596:修复 savanna_small_farm 被内部地形匹配道路连接件盖住的问题。",
    "tumble.function.structure_generation_fixes.villages.snow_pile.comment": "允许受同一浅层世界高度检查影响的原版村庄雪堆放置。",
    "tumble.function.structure_generation_fixes.villages.snowy_shepherds_house1.comment": "MC-170550:修复普通与僵尸村庄中 snowy_shepherds_house_1 的入口。",
