@@ -5,10 +5,10 @@ Subject: [PATCH] Allow higher anvil level costs
 
 
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index dcb9a91100cfd9a1e6ef4eb054d0558e8efc4171..273fd4c3f1d52506fd349cdc1a0f26276f7ab0fd 100644
+index 8bb1ee3fde4ce34ff2d153c3e20f38f7727758ba..d210e14ac9e94c3c16d4189c3d3179e8b5121cdb 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -3153,7 +3153,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -3148,7 +3148,19 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
      @Override
      public void onUpdateAbilities() {
          if (this.connection != null) {

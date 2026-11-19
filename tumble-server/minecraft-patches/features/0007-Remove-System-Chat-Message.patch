@@ -5,10 +5,10 @@ Subject: [PATCH] Remove System Chat Message
 
 
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index a4556d9124ac81c0996c2b5a48713b4d4cb828dd..aba97d0476805d3ee48ec1ce5d47eb87c74199a4 100644
+index cbdaa095b56e91fc95c9a3ac71150398e1c6b0cd..57cfc0c2d3ef8ad933f575bd318d5f3f8fb820bb 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -2251,9 +2251,10 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2253,9 +2253,10 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @Override
      public void sendSystemMessage(final Component message) {

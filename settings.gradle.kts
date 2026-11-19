@@ -20,7 +20,7 @@ plugins {
 
 rootProject.name = "tumble"
 
-for(name in listOf("tumble-api","tumble-server","tumble-checkstyle")){
+for (name in listOf("tumble-api", "tumble-server")) {
     include(name)
     File(name).mkdirs()
 }
@@ -35,5 +35,3 @@ gradle.lifecycle.beforeProject {
         "$mcVersion.build.$buildNumber-$channel"
     }
 }
-
-include("tumble-checkstyle")

@@ -229,10 +229,10 @@ index 03b4614473addb5777434657a51e4865992d7e23..9df05fd01e85ea7a88ff3663d26229d1
                              ChunkMap.this.level.debugSynchronizers().registerEntity(this.entity);
                          }
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 273fd4c3f1d52506fd349cdc1a0f26276f7ab0fd..1c9d73ea9b6e9238e4d6cdc0fff5ab3960895911 100644
+index d210e14ac9e94c3c16d4189c3d3179e8b5121cdb..11b96ecf8a081dc3b18fef8efa499dccfb18ace6 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -854,6 +854,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -845,6 +845,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
      @Override
      public void tick() {
          if (carpet.script.external.ScarpetNativeRemovals.tickPending(this)) return;
@@ -240,7 +240,7 @@ index 273fd4c3f1d52506fd349cdc1a0f26276f7ab0fd..1c9d73ea9b6e9238e4d6cdc0fff5ab39
          if (fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.forceRestock) {
              Inventory inventory = this.getInventory();
              var items = inventory.getNonEquipmentItems();
-@@ -3374,6 +3375,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -3369,6 +3370,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
  
      public void resetLastActionTime() {
          this.lastActionTime = Util.getMillis();
@@ -374,7 +374,7 @@ index 6a9d84cc53e51ad93dbd8634f4b36ee2d03569f2..4b8da8340556d03e51bb754c5ce5ef6f
          if (!unpackedLastSeen.isEmpty()) {
              this.tryHandleChat(packet.command(), true, () -> {
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index a46ada083d9ea0db75c4759a64d3f896c968c4d6..07a320ad87e2607073d9823fda0c2dafa666bfe5 100644
+index b927d81414980f80c3e498d9989d16c2f23880a6..c2078ddbf128d32af9ac20cb6fbbc2fc2e2f53dd 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -374,6 +374,7 @@ public abstract class PlayerList {
