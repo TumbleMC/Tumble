@@ -28,7 +28,11 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 | `paper-server/` | `tumble-server/paper-patches/` | `:tumble-server:rebuildPaperServerPatches` |
 | `lophine-api/` | `tumble-api/lophine-patches/` | `rebuildLophineApiPatches`（根项目） |
 | `paper-api/` | `tumble-api/paper-patches/` | `rebuildPaperApiPatches`（根项目） |
-| `lophine-server/build.gradle.kts` 等单文件 | `tumble-server/build.gradle.kts.patch` | `rebuildLophineSingleFilePatches` |
+| `lophine-server/build.gradle.kts` | `tumble-server/build.gradle.kts.patch` | `rebuildLophineSingleFilePatches` |
+| `lophine-api/build.gradle.kts` | `tumble-api/build.gradle.kts.patch` | 同上（一个任务同时重建三个文件） |
+| `lophine-checkstyle/build.gradle.kts` | `tumble-checkstyle/build.gradle.kts.patch` | 同上 |
+
+> 单文件补丁任务按 upstream 注册，不按文件分：`rebuildLophineSingleFilePatches` 一次重建上表三个 `*.patch`；应用用 `applyLophineSingleFilePatches`，出现 `.rej` 时用 `applyLophineSingleFilePatchesFuzzy` 重试（仍失败则手工补 hunk、删 `.rej`、再 rebuild）。
 
 ## 添加补丁的标准流程
 
@@ -366,6 +370,7 @@ Tumble 的补丁是「源码修改 + git 提交 + gradle 任务重建」三层�
 ./gradlew applyAllPatches                      # 应用全部补丁，建立工作仓库
 ./gradlew :tumble-server:rebuildAllServerPatches  # 重建服务端全部补丁
 ./gradlew rebuildLophinePatches                # 重建 API 全部补丁
+./gradlew rebuildLophineSingleFilePatches      # 重建 3 个 build.gradle.kts 单文件补丁（tumble-server / tumble-api / tumble-checkstyle）
 ./gradlew :tumble-server:rebuildMinecraftPatches  # 仅重建 minecraft 补丁
 ./gradlew :tumble-server:rebuildLophineServerPatches # 仅重建 lophine 服务端补丁
 ./gradlew rebuildLophineApiPatches             # 仅重建 lophine API 补丁
